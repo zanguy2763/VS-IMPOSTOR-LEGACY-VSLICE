@@ -176,7 +176,7 @@ class ToogusStage extends Stage
 		fg.scrollFactor.set(1, 1);
 		add(fg);
 
-      if(PlayState.instance.currentSong.id.toLowerCase == "sussus-toogus")
+      if(PlayState.instance.currentSong.id.toLowerCase() == "sussus-toogus")
       {
 		var defs:Array<WalkerDef> = [
 			new WalkerDef(ext + 'walkers', 'blue', .7),
@@ -255,7 +255,7 @@ class ToogusStage extends Stage
 		if (event == null)
 			return;
 
-     if(PlayState.instance.currentSong.id.toLowerCase == "sussus-toogus")
+     if(PlayState.instance.currentSong.id.toLowerCase() == "sussus-toogus")
      {
 		switch (event.step)
 		{
