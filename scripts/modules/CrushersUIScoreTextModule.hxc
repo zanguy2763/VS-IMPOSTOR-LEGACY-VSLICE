@@ -70,6 +70,9 @@ class CrushersUIScoreTextModule extends Module
 	var scoreTxt:FlxBitmapText = null;
 	var playScoreText:FlxBitmapText = null;
 
+   var acc = null;
+   var changedColor = true;
+
 	public function new():Void
 	{
 		super("CrushersUIScoreTextModule", 1, {
@@ -86,9 +89,6 @@ class CrushersUIScoreTextModule extends Module
 
 		scoreTxt = new FlxBitmapText(0, playScoreText.y, '', playScoreText.font);
 		scoreTxt.borderColor = playScoreText.borderColor;
-		scoreTxt.borderStyle = playScoreText.borderStyle;
-		scoreTxt.borderSize = playScoreText.borderSize;
-		scoreTxt.borderQuality = playScoreText.borderQuality;
 		scoreTxt.textColor = playScoreText.textColor;
 		scoreTxt.letterSpacing = playScoreText.letterSpacing;
 		scoreTxt.wordWrap = playScoreText.wordWrap;
@@ -97,6 +97,19 @@ class CrushersUIScoreTextModule extends Module
 		scoreTxt.cameras = [playState.camHUD];
 		playState.add(scoreTxt);
 		playState.refresh();
+	}
+
+   function onCountdownStart(event)
+	{
+      super.onCountdownStart(event);
+
+      if(PlayState.instance.currentSong.id.toLowerCase() == "sussus-nuzzus")
+      {
+         PlayState.instance.scoreText.font = FlxBitmapFont.fromAngelCode(Paths.font("apple_kid.png"), Paths.font("apple_kid.fnt"));
+      }
+      else{
+        PlayState.instance.scoreText.font = FlxBitmapFont.fromAngelCode(Paths.font("vcr-bmp.png"), Paths.font("vcr-bmp.fnt"));
+      }
 	}
 
 	public override function onUpdate(event:ScriptEvent):Void
@@ -109,10 +122,12 @@ class CrushersUIScoreTextModule extends Module
 			playScoreText.active = false;
 		}
 
+      acc = FlxMath.roundDecimal((Highscore.tallies.sick + Highscore.tallies.good - Highscore.tallies.missed) / noteHitCalculation() * 100, 2);
 		if(scoreTxt != null)
 		{
-			scoreTxt.text = getScoreText() + getMissesText() + getAccuracyText();
+			scoreTxt.text = getScoreText() + getMissesText() + getAccuracyText() + getRankText();
 			scoreTxt.x = (FlxG.width - scoreTxt.width) / 2; // BAND AID FIX because 0.8.3 dropped WAY earlier than expected
+         updateScoreColor();
 		}
 	}
 
@@ -153,18 +168,34 @@ class CrushersUIScoreTextModule extends Module
 
 	function getAccuracyText():String
 	{
-		var rank:String = returnRank();
-
 		return ' | Accuracy: '
 			+ returnAccuracy()
-			+ ACCURACY_SIGN
-			+ (rank != null ? ' [' + rank + ']' : 'N/A');
+         + ACCURACY_SIGN;
 	}
+
+   function getRankText():String
+   {
+      return ' | Rank: '
+         + returnLegacyRank();
+       //  + '[' + returnRank() + ']';
+   }
+
+   function returnLegacyRank():String
+   {
+     if(Math.isNaN(acc) || acc < 0) return 'N/A';
+     if(acc >= 99 && Highscore.tallies.missed == 0) return 'P';
+     if(acc >= 95 && Highscore.tallies.missed == 0) return 'S';
+     if(acc >= 90 && Highscore.tallies.missed <= 20) return 'A';
+     if(acc >= 85 && Highscore.tallies.missed <= 30) return 'B';
+     if(acc >= 70 && Highscore.tallies.missed <= 50) return 'C';
+     if(acc >= 50 && Highscore.tallies.missed <= 70) return 'D';
+     return 'F';
+   }
 
 	function returnAccuracy():Float
 	{
 		var clearPercentFloat:Float = FlxMath.roundDecimal((Highscore.tallies.sick + Highscore.tallies.good - Highscore.tallies.missed) / noteHitCalculation() * 100, 2);
-		if (Math.isNaN(clearPercentFloat) || clearPercentFloat < 0) return 0;
+		if (Math.isNaN(clearPercentFloat) || clearPercentFloat < 0) return 'N/A';
 		return clearPercentFloat;
 	}
 
@@ -208,6 +239,10 @@ class CrushersUIScoreTextModule extends Module
 		return (Highscore.tallies.totalNotesHit + Highscore.tallies.missed);
 	}
 
+   function onSongLoaded(event)
+   {
+     changedColor = false;
+   }
 
 	function onSongEvent(event)
 	{
@@ -215,11 +250,6 @@ class CrushersUIScoreTextModule extends Module
 		{
 			changedColor = false;
 		}
-	}
-
-	function onSongLoaded(event)
-	{
-		changedColor = false;
 	}
 
 	function onSongRetry(event)
@@ -236,7 +266,7 @@ class CrushersUIScoreTextModule extends Module
 		var song:String = playState.currentSong.id.toLowerCase();
 
 		// Bloqueia mudança de cor nessas músicas
-		if (song == "defeat" || song == "victory")
+		if (song == "defeat" || song == "boiling-point" || song == "sussus-nuzzus")
 		{
 			return;
 		}
