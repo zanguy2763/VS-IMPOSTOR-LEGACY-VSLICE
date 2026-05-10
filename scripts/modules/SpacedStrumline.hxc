@@ -1,0 +1,26 @@
+import funkin.modding.module.Module;
+import funkin.play.PlayState;
+import flixel.FlxG;
+import funkin.ui.FullScreenScaleMode;
+import funkin.ui.Constants;
+
+class SpacedStrumline extends Module
+{
+    public function new()
+    {
+       super("SpacedStrumline");
+    }
+
+    function onCountdownStart(event)
+    {
+       super.onCountdownStart(event);
+  
+       if(FlxG.onMobile) return;
+       if(PlayState.instance.playerStrumline == null) return;
+
+       final cutoutSize = FullScreenScaleMode.gameCutoutSize.x / 2.5;
+       var playerStrum = PlayState.instance.playerStrumline;
+
+       PlayState.instance.playerStrumline.x = FlxG.width - playerStrum.width - (Constants.STRUMLINE_X_OFFSET + cutoutSize); // same gap as opponent strumline from screen end.
+    }
+}
