@@ -17,6 +17,7 @@ class LegacyPopUps extends Module
         {
             FunkinMemory.cacheTexture(Paths.image('notestyles/num' + i));
             FunkinMemory.cacheTexture(Paths.image('notestyles/num' + i + '-pixel'));
+			FunkinMemory.cacheTexture(Paths.image('notestyles/num' + i + '-nuzzus'));
         }
 
         // normal
@@ -32,6 +33,13 @@ class LegacyPopUps extends Module
         FunkinMemory.cacheTexture(Paths.image('notestyles/good-pixel'));
         FunkinMemory.cacheTexture(Paths.image('notestyles/bad-pixel'));
         FunkinMemory.cacheTexture(Paths.image('notestyles/shit-pixel'));
+
+    	// nuzzus
+		FunkinMemory.cacheTexture(Paths.image('notestyles/epic-nuzzus'));
+        FunkinMemory.cacheTexture(Paths.image('notestyles/sick-nuzzus'));
+        FunkinMemory.cacheTexture(Paths.image('notestyles/good-nuzzus'));
+        FunkinMemory.cacheTexture(Paths.image('notestyles/bad-nuzzus'));
+        FunkinMemory.cacheTexture(Paths.image('notestyles/shit-nuzzus'));
     }
 
     public var ratingGraphic:Null<FlxSprite>;
