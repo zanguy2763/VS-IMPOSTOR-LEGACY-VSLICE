@@ -1,0 +1,35 @@
+{
+ "version": "2.2.4",
+ "songName": "Mando",
+ "charter": "Unknown",
+ "artist": "Unknown",
+ "offsets": { },
+ "playData": {
+  "difficulties": [
+   "normal"
+  ],
+  "characters": {
+   "player": "bf",
+   "girlfriend": "gf",
+   "opponent": "dad",
+   "opponentVocals": [
+    "yellow"
+   ],
+   "playerVocals": [
+    "bf"
+   ]
+  },
+  "stage": "mainStage",
+  "noteStyle": "funkin",
+  "previewEnd": 0
+ },
+ "generatedBy": "Friday Night Funkin' - v0.8.3",
+ "timeChanges": [
+  {
+   "t": 0,
+   "b": 0,
+   "bpm": 130,
+   "bt": [4, 4, 4, 4]
+  }
+ ]
+}
