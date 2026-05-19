@@ -1,0 +1,86 @@
+{
+	"renderType": "animateatlas",
+	"version": "1.0.1",
+	"offsets": [
+		0,
+		0
+	],
+	"danceEvery": 2,
+	"scale": 1.2,
+	"name": "maroonP",
+	"cameraOffsets": [
+		-210,
+		260
+	],
+	"flipX": false,
+	"isPixel": false,
+	"singTime": 6.1,
+	"startingAnimation": "idle",
+	"healthIcon": {
+		"id": "maroon-parasite",
+		"isPixel": false
+	},
+	"assetPath": "shared:characters/triple/maroon/maroonParasite",
+	"animations": [
+		{
+			"frameIndices": [],
+			"prefix": "idle",
+			"offsets": [
+				249,
+				40
+			],
+			"frameRate": 24,
+			"name": "idle",
+			"looped": false,
+			"animType": "symbol"
+		},
+		{
+			"frameIndices": [],
+			"prefix": "right",
+			"offsets": [
+				243,
+				72
+			],
+			"frameRate": 24,
+			"name": "singRIGHT",
+			"looped": false,
+			"animType": "symbol"
+		},
+		{
+			"frameIndices": [],
+			"prefix": "down",
+			"offsets": [
+				294,
+				248
+			],
+			"frameRate": 24,
+			"name": "singDOWN",
+			"looped": false,
+			"animType": "symbol"
+		},
+		{
+			"frameIndices": [],
+			"prefix": "left",
+			"offsets": [
+				313,
+				73
+			],
+			"frameRate": 24,
+			"name": "singLEFT",
+			"looped": false,
+			"animType": "symbol"
+		},
+		{
+			"frameIndices": [],
+			"prefix": "up",
+			"offsets": [
+				513,
+				350
+			],
+			"frameRate": 24,
+			"name": "singUP",
+			"looped": false,
+			"animType": "symbol"
+		}
+	]
+}
