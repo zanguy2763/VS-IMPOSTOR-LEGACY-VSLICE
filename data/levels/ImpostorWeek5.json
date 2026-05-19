@@ -1,13 +1,13 @@
 {
     "version": "1.0.0",
-    "name": "MIRA Mania",
+    "name": "Magmatic Monstrosity",
     "titleAsset": "storymenu/titles/extra",
   "capsule": {
-    "name": "MIRA Mania"
+    "name": "Magmatic Monstrosity"
   },
     "props": [],
     "background": "#FFFFFF",
     "songs": [
-        "sussus-toogus"
+        "ashes", "magmatic", "boiling-point"
     ]
 }

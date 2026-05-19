@@ -45,7 +45,7 @@
     "noteSplash": {
       "assetPath": "notestyles/noteSplashes",
       "alpha": 0.8,
-      "offsets": [25, -20],
+      "offsets": [20, -20],
       "data": {
         "enabled": true,
         "leftSplashes": [
