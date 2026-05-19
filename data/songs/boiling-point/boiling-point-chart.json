@@ -31,8 +31,8 @@
    "e": "SetCameraBop",
    "v": {
 	"rate": 1,
-	"offset": 0,
-	"intensity": 1.1
+	"intensity": 1.1,
+	"offset": 0
 }
   },
   {
@@ -54,7 +54,7 @@
    "e": "setChrom",
    "v": {
 	"amount": -0.7,
-  "speed": 0.2
+	"speed": 0.2
 }
   },
   {
@@ -62,7 +62,7 @@
    "e": "setChrom",
    "v": {
 	"amount": -2,
-  "speed": 0.05
+	"speed": 0.05
 }
   },
   {
@@ -73,11 +73,19 @@
 }
   },
   {
+   "t": 24000,
+   "e": "ScreenShakeEvent",
+   "v": {
+	"value1": "1, 0.01",
+	"value2": "1, 0.01"
+}
+  },
+  {
    "t": 24112.5,
    "e": "setChrom",
    "v": {
 	"amount": -0.1,
-  "speed": 1.2
+	"speed": 1.2
 }
   },
   {
@@ -85,7 +93,7 @@
    "e": "setChrom",
    "v": {
 	"amount": -0.7,
-  "speed": 0.3
+	"speed": 0.3
 }
   },
   {
@@ -93,8 +101,8 @@
    "e": "SetCameraBop",
    "v": {
 	"rate": 9999,
-	"offset": 0,
-	"intensity": 0
+	"intensity": 0,
+	"offset": 0
 }
   },
   {
@@ -102,8 +110,8 @@
    "e": "SetCameraBop",
    "v": {
 	"rate": 1,
-	"offset": 0,
-	"intensity": 1
+	"intensity": 1,
+	"offset": 0
 }
   },
   {
@@ -118,7 +126,7 @@
    "e": "setChrom",
    "v": {
 	"amount": -0.1,
-  "speed": 1.5
+	"speed": 1.5
 }
   },
   {
@@ -126,7 +134,7 @@
    "e": "setChrom",
    "v": {
 	"amount": -0.8,
-  "speed": 0.2
+	"speed": 0.2
 }
   },
   {
@@ -134,7 +142,7 @@
    "e": "setChrom",
    "v": {
 	"amount": -2.1,
-  "speed": 0.05
+	"speed": 0.05
 }
   },
   {
@@ -142,7 +150,7 @@
    "e": "setChrom",
    "v": {
 	"amount": -2,
-  "speed": 0.05
+	"speed": 0.05
 }
   },
   {
@@ -153,11 +161,19 @@
 }
   },
   {
+   "t": 33600,
+   "e": "ScreenShakeEvent",
+   "v": {
+	"value1": "1, 0.01",
+	"value2": "1, 0.01"
+}
+  },
+  {
    "t": 33675,
    "e": "setChrom",
    "v": {
 	"amount": -0.2,
-  "speed": 2
+	"speed": 2
 }
   },
   {
@@ -172,7 +188,7 @@
    "e": "setChrom",
    "v": {
 	"amount": -0.2,
-  "speed": 0.2
+	"speed": 0.2
 }
   },
   {
@@ -215,8 +231,8 @@
    "e": "SetCameraBop",
    "v": {
 	"rate": 1,
-	"offset": 0,
-	"intensity": 0
+	"intensity": 0,
+	"offset": 0
 }
   },
   {
@@ -224,7 +240,7 @@
    "e": "setChrom",
    "v": {
 	"amount": -0.75,
-  "speed": 0.2
+	"speed": 0.2
 }
   },
   {
@@ -232,7 +248,7 @@
    "e": "setChrom",
    "v": {
 	"amount": -0.85,
-  "speed": 0.2
+	"speed": 0.2
 }
   },
   {
@@ -240,8 +256,8 @@
    "e": "SetCameraBop",
    "v": {
 	"rate": 1,
-	"offset": 0,
-	"intensity": 1
+	"intensity": 1,
+	"offset": 0
 }
   },
   {
@@ -256,7 +272,7 @@
    "e": "setChrom",
    "v": {
 	"amount": -0.2,
-  "speed": 1.2
+	"speed": 1.2
 }
   },
   {
@@ -271,8 +287,8 @@
    "e": "SetCameraBop",
    "v": {
 	"rate": 1,
-	"offset": 0,
-	"intensity": 1.3
+	"intensity": 1.3,
+	"offset": 0
 }
   },
   {
@@ -287,8 +303,8 @@
    "e": "SetCameraBop",
    "v": {
 	"rate": 2,
-	"offset": 0,
-	"intensity": 1.2
+	"intensity": 1.2,
+	"offset": 0
 }
   },
   {
@@ -317,7 +333,7 @@
    "e": "setChrom",
    "v": {
 	"amount": -1.2,
-  "speed": 0.2
+	"speed": 0.2
 }
   },
   {
@@ -325,8 +341,8 @@
    "e": "SetCameraBop",
    "v": {
 	"rate": 2,
-	"offset": 0,
-	"intensity": 0
+	"intensity": 0,
+	"offset": 0
 }
   },
   {
@@ -341,8 +357,8 @@
    "e": "SetCameraBop",
    "v": {
 	"rate": 1,
-	"offset": 0,
-	"intensity": 1
+	"intensity": 1,
+	"offset": 0
 }
   },
   {
@@ -350,7 +366,7 @@
    "e": "setChrom",
    "v": {
 	"amount": -0.2,
-  "speed": 1.2
+	"speed": 1.2
 }
   },
   {
@@ -365,8 +381,8 @@
    "e": "SetCameraBop",
    "v": {
 	"rate": 1,
-	"offset": 0,
-	"intensity": 1.1
+	"intensity": 1.1,
+	"offset": 0
 }
   },
   {
@@ -381,7 +397,7 @@
    "e": "setChrom",
    "v": {
 	"amount": -0.8,
-  "speed": 0.2
+	"speed": 0.2
 }
   },
   {
@@ -389,7 +405,7 @@
    "e": "setChrom",
    "v": {
 	"amount": -0.2,
-  "speed": 0.9
+	"speed": 0.9
 }
   },
   {
@@ -404,8 +420,8 @@
    "e": "SetCameraBop",
    "v": {
 	"rate": 1,
-	"offset": 0,
-	"intensity": 1.2
+	"intensity": 1.2,
+	"offset": 0
 }
   },
   {
@@ -427,8 +443,8 @@
    "e": "SetCameraBop",
    "v": {
 	"rate": 1,
-	"offset": 0,
-	"intensity": 0
+	"intensity": 0,
+	"offset": 0
 }
   },
   {
@@ -436,7 +452,7 @@
    "e": "setChrom",
    "v": {
 	"amount": -0.35,
-  "speed": 2
+	"speed": 2
 }
   },
   {
@@ -451,8 +467,8 @@
    "e": "SetCameraBop",
    "v": {
 	"rate": 1,
-	"offset": 0,
-	"intensity": 1.1
+	"intensity": 1.1,
+	"offset": 0
 }
   },
   {
@@ -467,7 +483,7 @@
    "e": "setChrom",
    "v": {
 	"amount": -1.4,
-  "speed": 0.2
+	"speed": 0.2
 }
   },
   {
@@ -475,7 +491,7 @@
    "e": "setChrom",
    "v": {
 	"amount": -0.4,
-  "speed": 1
+	"speed": 1
 }
   },
   {
@@ -483,8 +499,8 @@
    "e": "SetCameraBop",
    "v": {
 	"rate": 1,
-	"offset": 0,
-	"intensity": 1.15
+	"intensity": 1.15,
+	"offset": 0
 }
   },
   {
@@ -499,7 +515,7 @@
    "e": "setChrom",
    "v": {
 	"amount": -1.5,
-  "speed": 0.2
+	"speed": 0.2
 }
   },
   {
@@ -507,7 +523,7 @@
    "e": "setChrom",
    "v": {
 	"amount": -0.45,
-  "speed": 0.6
+	"speed": 0.6
 }
   },
   {
@@ -522,7 +538,7 @@
    "e": "setChrom",
    "v": {
 	"amount": -0.55,
-  "speed": 2
+	"speed": 2
 }
   },
   {
@@ -530,8 +546,8 @@
    "e": "SetCameraBop",
    "v": {
 	"rate": 1,
-	"offset": 0,
-	"intensity": 1.2
+	"intensity": 1.2,
+	"offset": 0
 }
   },
   {
@@ -539,8 +555,8 @@
    "e": "SetCameraBop",
    "v": {
 	"rate": 1,
-	"offset": 0,
-	"intensity": 1.24
+	"intensity": 1.24,
+	"offset": 0
 }
   },
   {
@@ -555,8 +571,8 @@
    "e": "SetCameraBop",
    "v": {
 	"rate": 1,
-	"offset": 0,
-	"intensity": 1.28
+	"intensity": 1.28,
+	"offset": 0
 }
   },
   {
@@ -571,8 +587,8 @@
    "e": "SetCameraBop",
    "v": {
 	"rate": 1,
-	"offset": 0,
-	"intensity": 1.32
+	"intensity": 1.32,
+	"offset": 0
 }
   },
   {
@@ -580,7 +596,7 @@
    "e": "setChrom",
    "v": {
 	"amount": -0.9,
-  "speed": 8
+	"speed": 8
 }
   },
   {
@@ -588,8 +604,8 @@
    "e": "SetCameraBop",
    "v": {
 	"rate": 1,
-	"offset": 0,
-	"intensity": 1.36
+	"intensity": 1.36,
+	"offset": 0
 }
   },
   {
@@ -597,8 +613,8 @@
    "e": "SetCameraBop",
    "v": {
 	"rate": 1,
-	"offset": 0,
-	"intensity": 1.42
+	"intensity": 1.42,
+	"offset": 0
 }
   },
   {
@@ -606,8 +622,8 @@
    "e": "SetCameraBop",
    "v": {
 	"rate": 1,
-	"offset": 0,
-	"intensity": 0
+	"intensity": 0,
+	"offset": 0
 }
   },
   {
@@ -622,7 +638,7 @@
    "e": "setChrom",
    "v": {
 	"amount": -0.5,
-  "speed": 0.5
+	"speed": 0.5
 }
   },
   {
