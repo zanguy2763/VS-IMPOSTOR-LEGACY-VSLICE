@@ -1,0 +1,47 @@
+import funkin.modding.module.Module;
+import Std;
+import funkin.ui.options.OptionsState;
+import funkin.save.Save;
+
+class GraphicsOptions extends Module
+{
+    var save = null;
+
+    var enabled:Bool = true;
+
+    function bindSave(){
+        save = Save.instance;
+    }
+
+    function new(){
+        super("GraphicsOptions");
+        bindSave();
+
+        if(save.modOptions["Shaders"] == null)
+            save.modOptions["Shaders"] = true;
+
+        if(save.modOptions["Low Quality"] == null)
+            save.modOptions["Low Quality"] = false;
+    }
+
+
+    var inOptions:Bool = false;
+
+    override function onStateChangeEnd(event){
+        super.onStateChangeEnd(event);
+        if(Std.isOfType(event.targetState, OptionsState))
+        {
+            var prefs = event.targetState.optionsCodex.pages.get("preferences");
+
+            bindSave();
+
+            prefs.createPrefItemCheckbox("Shaders", "If disabled, disables shaders to improve performance.", function(value) {
+                save.modOptions["Shaders"] = value;
+            }, save.modOptions["Shaders"]);
+
+            prefs.createPrefItemCheckbox("Low Quality", "If disabled, disables specific items from background to improve performance.", function(value) {
+                save.modOptions["Low Quality"] = value;
+            }, save.modOptions["Low Quality"]);
+        }
+    }
+}
