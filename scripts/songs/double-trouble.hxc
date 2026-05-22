@@ -6,7 +6,7 @@ import flixel.FlxG;
 import flixel.addons.display.FlxRuntimeShader;
 import openfl.filters.ShaderFilter;
 import StringTools;
-import funkin.Conductor;
+import funkin.save.Save;
 
 class DoubleTroubleSong extends Song
 {
@@ -59,11 +59,12 @@ class DoubleTroubleSong extends Song
     bf.shader = gf.shader = bfShader;
     redPostor.shader = dad.shader = greenShader;
 
-    rainShader = new FlxRuntimeShader(Assets.getText(Paths.frag("rain")));
+    rainShader = new FlxRuntimeShader(Assets.getText(Paths.frag('rain-legacy')));
 	rainShader.setFloatArray('uScreenResolution', [FlxG.width, FlxG.height]);
 	rainShader.setFloat('uTime', 0);
 	rainShader.setFloat('uScale', FlxG.height / 200);
 	rainShader.setFloat('uIntensity', rainIntensity);
+    if(Save.instance.modOptions["Shaders"]) PlayState.instance.camGame.filters = [new ShaderFilter(rainShader)];
     }
 
     function onUpdate(event):Void
