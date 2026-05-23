@@ -36,7 +36,7 @@
   "position": [-1200, -750],
   "scale": 1,
   "startingAnimation": "",
-  "zIndex": 4
+  "zIndex": 8
 },
 {
   "assetPath": "BG/pretender/front plant",
@@ -45,7 +45,7 @@
   "position": [-2, -680],
   "scale": 1,
   "startingAnimation": "",
-  "zIndex": 5
+  "zIndex": 9
 },
 {
   "assetPath": "BG/pretender/knocked over plant",
@@ -54,7 +54,7 @@
   "position": [1000, 190],
   "scale": 1,
   "startingAnimation": "",
-  "zIndex": 6
+  "zIndex": 10
 },
 {
   "assetPath": "BG/pretender/knocked over plant 2",
@@ -63,7 +63,7 @@
   "position": [-800, 260],
   "scale": 1,
   "startingAnimation": "",
-  "zIndex": 7
+  "zIndex": 11
 },
 {
   "assetPath": "BG/pretender/tomatodead",
@@ -72,7 +72,7 @@
   "position": [950, 250],
   "scale": 1,
   "startingAnimation": "",
-  "zIndex": 8
+  "zIndex": 12
 },
 {
   "animations": [
@@ -89,7 +89,7 @@
   "position": [-1, 188],
   "scale": 1,
   "startingAnimation": "bop",
-  "zIndex": 18
+  "zIndex": 13
 },
 {
   "assetPath": "BG/pretender/ripbozo",
@@ -98,7 +98,7 @@
   "position": [900, 500],
   "scale": 0.6,
   "startingAnimation": "",
-  "zIndex": 19
+  "zIndex": 14
 },
 {
   "assetPath": "BG/pretender/rhm dead",
@@ -108,7 +108,7 @@
   "scale": 1,
   "scroll": [1.1, 1],
   "startingAnimation": "",
-  "zIndex": 20
+  "zIndex": 15
 },
 {
   "animations": [
