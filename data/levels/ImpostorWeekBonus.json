@@ -3,7 +3,7 @@
   "name": "Extras",
   "titleAsset": "storymenu/titles/tutorial",
   "capsule": {
-    "name": "Freeplay"
+    "name": "Bonus"
   },
   "visible": false,
   "props": [
