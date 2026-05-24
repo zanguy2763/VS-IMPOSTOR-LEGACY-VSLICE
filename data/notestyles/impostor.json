@@ -74,22 +74,22 @@
         "enabled": true,
         "left": {
           "start": { "prefix": "left start" },
-          "hold": { "prefix": "left loop" },
+          "hold": { "prefix": "left loop", "frameRate": 48},
           "end": { "prefix": "left end" }
         },
         "right": {
          "start": { "prefix": "right start" },
-          "hold": { "prefix": "right loop" },
+          "hold": { "prefix": "right loop", "frameRate": 48},
           "end": { "prefix": "right end" }
         },
         "up": {
          "start": { "prefix": "up start" },
-          "hold": { "prefix": "up loop" },
+          "hold": { "prefix": "up loop", "frameRate": 48 },
           "end": { "prefix": "up end" }
         },
         "down": {
           "start": { "prefix": "down start" },
-          "hold": { "prefix": "down loop" },
+          "hold": { "prefix": "down loop", "frameRate": 48 },
           "end": { "prefix": "down end" }
         }
       }
