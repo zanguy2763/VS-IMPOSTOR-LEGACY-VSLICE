@@ -1,17 +1,13 @@
 import funkin.play.stage.Stage;
 import flixel.addons.display.FlxBackdrop;
-import flixel.system.FlxBGSprite;
 import openfl.filters.ShaderFilter;
 import StringTools;
 import flixel.FlxSprite;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxTimer;
 import flixel.tweens.FlxEase;
-import funkin.graphics.FunkinSprite;
 import openfl.display.BlendMode;
 import flixel.util.FlxColor;
-import funkin.graphics.shaders.DropShadowShader;
-import funkin.graphics.shaders.RuntimeRainShader;
 
 class DTStage extends Stage
 {
@@ -20,16 +16,7 @@ class DTStage extends Stage
         super('dt');
     }
 
-    var greenShader = null;
-var bfShader = null;
-var overlayShader:OverlayShader;
 var ext = 'BG/dt/';
-var toogusorange:FlxSprite;
-var toogusblue:FlxSprite;
-var tooguswhite:FlxSprite;
-var red:Character;
-var redElement:FlxSpriteElement;
-var introFade:FlxSprite;
 var mist:FlxBackdrop;
 var mist2:FlxBackdrop;
 var mist3:FlxBackdrop;
@@ -38,30 +25,8 @@ var mist5:FlxBackdrop;
 var mist6:FlxBackdrop; // cutscene mists
 var mist7:FlxBackdrop;
 var shine:FlxSprite;
-var rainIntensity:Float = .1;
-var heartRad:Float = 0;
-var rainShader:RuntimeRainShader = new RuntimeRainShader();
 
-var bfIntro:FunkinSprite;
 
-function onCreate(event)
-{
-    super.onCreate(event);
-
-    rainShader.scale = FlxG.height / 200;
-    rainShader.intensity = 0.1;
-
-    rainShaderFilter = new ShaderFilter(rainShader);
-    FlxG.camera.filters = [rainShaderFilter];
-}
-
-  override function onUpdate(event:ScriptEvent)
-  {
-    super.onUpdate(event);
-
-    rainShader.updateViewInfo(FlxG.width, FlxG.height, FlxG.camera);
-    rainShader.update(event.elapsed);
-  }
 
 override function buildStage()
 {
@@ -179,6 +144,13 @@ function onSongLoaded(event)
 	this.getNamedProp('overlay').screenCenter();
 	this.getNamedProp('overlay').x += 500;
 	this.getNamedProp('overlay').y += 300;
+}
+
+function onCountdownStart(event)
+{
+	super.onCountdownStart(event);
+
+	if(event.eventCanceled) intro();
 }
 
 public function intro()
