@@ -76,11 +76,14 @@ class LegacyPopUps extends Module
 
 	combosPadding = 0;
 
-	switch (PlayState.instance.noteStyle.id.toLowerCase())
+	switch (suffix)
 	{
-		case 'pixelimpostor':
+		case '-pixel':
 			ratingScale = 3;
 			combosScale = 3;
+		case '-nuzzus':
+			ratingScale = 2;
+			combosScale = 2;
 		default:
 			ratingScale = .42;
 			combosScale = .33;
