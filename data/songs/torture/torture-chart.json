@@ -36,8 +36,8 @@
    "t": 20806.4516129032,
    "e": "ClassicCameraZoom",
    "v": {
-	"zoom": 0.9,
-	"mode": "direct"
+	"mode": "direct",
+	"zoom": 0.9
 }
   },
   {
@@ -51,16 +51,16 @@
    "t": 25806.4516129032,
    "e": "ClassicCameraZoom",
    "v": {
-	"zoom": 1.2,
-	"mode": "direct"
+	"mode": "direct",
+	"zoom": 1.2
 }
   },
   {
    "t": 30967.7419354839,
    "e": "ClassicCameraZoom",
    "v": {
-	"zoom": 0.9,
-	"mode": "direct"
+	"mode": "direct",
+	"zoom": 0.9
 }
   },
   {
@@ -81,8 +81,8 @@
    "t": 36451.6129032258,
    "e": "ClassicCameraZoom",
    "v": {
-	"zoom": 1.2,
-	"mode": "direct"
+	"mode": "direct",
+	"zoom": 1.2
 }
   },
   {
@@ -96,8 +96,8 @@
    "t": 40000,
    "e": "ClassicCameraZoom",
    "v": {
-	"zoom": 0.9,
-	"mode": "direct"
+	"mode": "direct",
+	"zoom": 0.9
 }
   },
   {
@@ -118,8 +118,8 @@
    "t": 44032.2580645161,
    "e": "ClassicCameraZoom",
    "v": {
-	"zoom": 1.2,
-	"mode": "direct"
+	"mode": "direct",
+	"zoom": 1.2
 }
   },
   {
@@ -133,8 +133,8 @@
    "t": 46451.6129032258,
    "e": "ClassicCameraZoom",
    "v": {
-	"zoom": 0.9,
-	"mode": "direct"
+	"mode": "direct",
+	"zoom": 0.9
 }
   },
   {
@@ -148,8 +148,8 @@
    "t": 49032.2580645161,
    "e": "ClassicCameraZoom",
    "v": {
-	"zoom": 1.2,
-	"mode": "direct"
+	"mode": "direct",
+	"zoom": 1.2
 }
   },
   {
@@ -163,8 +163,8 @@
    "t": 51612.9032258064,
    "e": "ClassicCameraZoom",
    "v": {
-	"zoom": 0.9,
-	"mode": "direct"
+	"mode": "direct",
+	"zoom": 0.9
 }
   },
   {
@@ -178,8 +178,8 @@
    "t": 57096.7741935484,
    "e": "ClassicCameraZoom",
    "v": {
-	"zoom": 1.2,
-	"mode": "direct"
+	"mode": "direct",
+	"zoom": 1.2
 }
   },
   {
@@ -200,8 +200,8 @@
    "t": 61935.4838709677,
    "e": "ClassicCameraZoom",
    "v": {
-	"zoom": 0.9,
-	"mode": "direct"
+	"mode": "direct",
+	"zoom": 0.9
 }
   },
   {
@@ -222,8 +222,8 @@
    "t": 67258.064516129,
    "e": "ClassicCameraZoom",
    "v": {
-	"zoom": 1.2,
-	"mode": "direct"
+	"mode": "direct",
+	"zoom": 1.2
 }
   },
   {
@@ -237,8 +237,8 @@
    "t": 72258.064516129,
    "e": "ClassicCameraZoom",
    "v": {
-	"zoom": 0.9,
-	"mode": "direct"
+	"mode": "direct",
+	"zoom": 0.9
 }
   },
   {
@@ -252,8 +252,8 @@
    "t": 77419.3548387097,
    "e": "ClassicCameraZoom",
    "v": {
-	"zoom": 1.2,
-	"mode": "direct"
+	"mode": "direct",
+	"zoom": 1.2
 }
   },
   {
@@ -267,18 +267,18 @@
    "t": 82580.6451612903,
    "e": "PlayAnimation",
    "v": {
-	"target": "boyfriend",
+	"force": true,
 	"anim": "ROZEBUD",
-	"force": true
+	"target": "boyfriend"
 }
   },
   {
    "t": 82580.6451612903,
    "e": "HUDFadeEvent",
    "v": {
-	"duration": 1,
-	"unit": "seconds",
 	"shouldFadeIn": false,
+	"unit": "seconds",
+	"duration": 1,
 	"hud": "both"
 }
   },
@@ -291,27 +291,27 @@
    "t": 82822.5806451613,
    "e": "PlayAnimation",
    "v": {
-	"target": "girlfriend",
+	"force": true,
 	"anim": "rozebud?",
-	"force": true
+	"target": "girlfriend"
 }
   },
   {
    "t": 84274.1935483871,
    "e": "PlayAnimation",
    "v": {
-	"target": "dad",
+	"force": true,
 	"anim": "GETOUT",
-	"force": true
+	"target": "dad"
 }
   },
   {
    "t": 87500,
    "e": "HUDFadeEvent",
    "v": {
-	"duration": 1,
-	"unit": "seconds",
 	"shouldFadeIn": true,
+	"unit": "seconds",
+	"duration": 1,
 	"hud": "both"
 }
   },
@@ -326,8 +326,8 @@
    "t": 87741.935483871,
    "e": "ClassicCameraZoom",
    "v": {
-	"zoom": 0.9,
-	"mode": "direct"
+	"mode": "direct",
+	"zoom": 0.9
 }
   },
   {
@@ -367,16 +367,16 @@
    "t": 98064.5161290323,
    "e": "ClassicCameraZoom",
    "v": {
-	"zoom": 1.2,
-	"mode": "direct"
+	"mode": "direct",
+	"zoom": 1.2
 }
   },
   {
    "t": 108387.096774194,
    "e": "ClassicCameraZoom",
    "v": {
-	"zoom": 0.9,
-	"mode": "direct"
+	"mode": "direct",
+	"zoom": 0.9
 }
   },
   {
@@ -397,8 +397,8 @@
    "t": 113548.387096774,
    "e": "ClassicCameraZoom",
    "v": {
-	"zoom": 1.2,
-	"mode": "direct"
+	"mode": "direct",
+	"zoom": 1.2
 }
   },
   {
@@ -1735,7 +1735,8 @@
    {
     "t": 71774.1935483871,
     "d": 2,
-    "l": 403.225806451613
+    "l": 403.225806451613,
+    "k": "Alt"
    },
    {
     "t": 72258.064516129,
@@ -1745,7 +1746,8 @@
    {
     "t": 72258.064516129,
     "d": 0,
-    "l": 887.096774193548
+    "l": 887.096774193548,
+    "k": "Alt"
    },
    {
     "t": 72419.3548387097,
@@ -2383,29 +2385,35 @@
    },
    {
     "t": 102580.64516129,
-    "d": 2
+    "d": 2,
+    "k": "Alt"
    },
    {
     "t": 102741.935483871,
-    "d": 3
+    "d": 3,
+    "k": "Alt"
    },
    {
     "t": 102903.225806452,
-    "d": 2
+    "d": 2,
+    "k": "Alt"
    },
    {
     "t": 103064.516129032,
-    "d": 0
+    "d": 0,
+    "k": "Alt"
    },
    {
     "t": 103225.806451613,
     "d": 2,
-    "l": 241.935483870968
+    "l": 241.935483870968,
+    "k": "Alt"
    },
    {
     "t": 103387.096774194,
     "d": 1,
-    "l": 120.967741935484
+    "l": 120.967741935484,
+    "k": "Alt"
    },
    {
     "t": 103548.387096774,
@@ -2600,96 +2608,118 @@
    {
     "t": 113548.387096774,
     "d": 3,
-    "l": 241.935483870968
+    "l": 241.935483870968,
+    "k": "Alt"
    },
    {
     "t": 114032.258064516,
-    "d": 3
+    "d": 3,
+    "k": "Alt"
    },
    {
     "t": 114193.548387097,
-    "d": 3
+    "d": 3,
+    "k": "Alt"
    },
    {
     "t": 114516.129032258,
-    "d": 3
+    "d": 3,
+    "k": "Alt"
    },
    {
     "t": 114677.419354839,
-    "d": 3
+    "d": 3,
+    "k": "Alt"
    },
    {
     "t": 115000,
-    "d": 3
+    "d": 3,
+    "k": "Alt"
    },
    {
     "t": 115161.290322581,
-    "d": 3
+    "d": 3,
+    "k": "Alt"
    },
    {
     "t": 115483.870967742,
     "d": 1,
-    "l": 564.516129032258
+    "l": 564.516129032258,
+    "k": "Alt"
    },
    {
     "t": 116129.032258065,
-    "d": 3
+    "d": 3,
+    "k": "Alt"
    },
    {
     "t": 116290.322580645,
-    "d": 3
+    "d": 3,
+    "k": "Alt"
    },
    {
     "t": 116612.903225807,
-    "d": 3
+    "d": 3,
+    "k": "Alt"
    },
    {
     "t": 116774.193548387,
-    "d": 3
+    "d": 3,
+    "k": "Alt"
    },
    {
     "t": 117096.774193549,
-    "d": 3
+    "d": 3,
+    "k": "Alt"
    },
    {
     "t": 117258.064516129,
-    "d": 3
+    "d": 3,
+    "k": "Alt"
    },
    {
     "t": 117580.645161291,
-    "d": 3
+    "d": 3,
+    "k": "Alt"
    },
    {
     "t": 117741.935483871,
     "d": 3,
-    "l": 241.935483870968
+    "l": 241.935483870968,
+    "k": "Alt"
    },
    {
     "t": 118064.516129032,
     "d": 1,
-    "l": 564.516129032258
+    "l": 564.516129032258,
+    "k": "Alt"
    },
    {
     "t": 118225.806451613,
-    "d": 5
+    "d": 5,
+    "k": "Both"
    },
    {
     "t": 118387.096774194,
-    "d": 4
+    "d": 4,
+    "k": "Both"
    },
    {
     "t": 118548.387096774,
-    "d": 5
+    "d": 5,
+    "k": "Both"
    },
    {
     "t": 118709.677419355,
     "d": 6,
-    "l": 403.225806451613
+    "l": 403.225806451613,
+    "k": "Both"
    },
    {
     "t": 118709.677419355,
     "d": 2,
-    "l": 403.225806451613
+    "l": 403.225806451613,
+    "k": "Alt"
    }
   ]
  },
