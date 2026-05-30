@@ -187,7 +187,7 @@ class PinkStage extends Stage
 
         if(event.eventData.eventKind == 'pink toggle')
         {
-            if (pinkCanPulse == false)
+            if (!pinkCanPulse)
 			{
 				pinkCanPulse = true;
 				
