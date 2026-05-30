@@ -1,5 +1,8 @@
 import funkin.modding.module.Module;
 import funkin.play.PlayState;
+import flixel.util.FlxColor;
+import flixel.math.FlxPoint;
+import StringTools;
 
 class LegacyModule extends Module
 {
@@ -10,7 +13,12 @@ class LegacyModule extends Module
 
     var bfOff:Array<Float> = null;
     var dadOff:Array<Float> = null;
+    var baseX:Float = 0;
+    var baseY:Float = 0;
     var focusedOn:String;
+
+    var camDisplacement:Float = 20;
+    var displacement:Array<Float> = [0, 0];
 
     // function is called from utils
     public function camSpecialThing(?dad = null, ?bf = null, ?zoom:Float = -1, ?snaptoo:Int = -1)
@@ -29,27 +37,125 @@ class LegacyModule extends Module
     {
         if(PlayState.instance == null) return;
         super.onSongEvent(event);
-        if (dadOff == null && bfOff == null) return;
 
         if(event.eventData.eventKind == 'FocusCamera')
         {
-            if(event.eventData.getInt('char') == 1)
+            var char:Int = event.eventData.getInt('char');
+
+            switch(char)
+            {
+                case 1:            
+                focusedOn = 'dad';
+
+            if(dadOff != null)
             {
                 event.cancel();
+
+                baseX = dadOff[0];
+                baseY = dadOff[1];
+
                 PlayState.instance.resetCamera(false, false, false);
                 PlayState.instance.cancelCameraFollowTween();
-                PlayState.instance.cameraFollowPoint.setPosition(dadOff[0], dadOff[1]);
-                focusedOn = 'dad';
+                PlayState.instance.cameraFollowPoint.setPosition(baseX, baseY);
+            }
+            else
+            {
+                baseX = event.eventData.getFloat('x') + PlayState.instance.currentStage.getDad().cameraFocusPoint.x;
+                baseY = event.eventData.getFloat('y') + PlayState.instance.currentStage.getDad().cameraFocusPoint.y;
             }
 
-            if(event.eventData.getInt('char') == 0)
+        case 0:
+            focusedOn = 'bf';
+
+            if(bfOff != null)
             {
                 event.cancel();
+
+                baseX = bfOff[0];
+                baseY = bfOff[1];
+
                 PlayState.instance.resetCamera(false, false, false);
                 PlayState.instance.cancelCameraFollowTween();
-                PlayState.instance.cameraFollowPoint.setPosition(bfOff[0], bfOff[1]);
-                focusedOn = 'bf';
+                PlayState.instance.cameraFollowPoint.setPosition(baseX, baseY);
             }
+            else
+            {
+                baseX = event.eventData.getFloat('x') + PlayState.instance.currentStage.getBoyfriend().cameraFocusPoint.x;
+                baseY = event.eventData.getFloat('y') + PlayState.instance.currentStage.getBoyfriend().cameraFocusPoint.y;
+            }
+
+        case 2:
+            focusedOn = 'gf';
+
+        case -1:
+            focusedOn = null;
+    }
+}
+
+        if(event.eventData.eventKind == 'flash')
+        {
+            var charType = 1;
+            if(event.eventData.getInt('value') != null) charType = event.eventData.getInt('value');
+
+            switch (charType)
+			{
+				case 0:
+					PlayState.instance.camGame.flash(FlxColor.WHITE, 0.35);
+				case 1:
+					PlayState.instance.camGame.flash(FlxColor.WHITE, 0.35);
+				case 2:
+					PlayState.instance.camGame.flash(FlxColor.WHITE, 0.55);
+				case 3:
+					PlayState.instance.camGame.flash(FlxColor.WHITE, 0.55);
+			}
         }
     }
+
+    function onUpdate(event)
+{
+    if(PlayState.instance == null) return;
+
+    super.onUpdate(event);
+
+    displacement = [0, 0];
+
+    switch(focusedOn)
+    {
+        case 'bf':
+            var anim = PlayState.instance.currentStage.getBoyfriend().getCurrentAnimation();
+
+            if(StringTools.startsWith(anim, 'singLEFT')) displacement = [-camDisplacement, 0];
+            if(StringTools.startsWith(anim, 'singDOWN')) displacement = [0, camDisplacement];
+            if(StringTools.startsWith(anim, 'singUP')) displacement = [0, -camDisplacement];
+            if(StringTools.startsWith(anim, 'singRIGHT')) displacement = [camDisplacement, 0];
+
+            if(bfOff != null)
+            {
+                baseX = bfOff[0];
+                baseY = bfOff[1];
+            }
+
+        case 'dad':
+            var anim = PlayState.instance.currentStage.getDad().getCurrentAnimation();
+
+            if(StringTools.startsWith(anim, 'singLEFT')) displacement = [-camDisplacement, 0];
+            if(StringTools.startsWith(anim, 'singDOWN')) displacement = [0, camDisplacement];
+            if(StringTools.startsWith(anim, 'singUP')) displacement = [0, -camDisplacement];
+            if(StringTools.startsWith(anim, 'singRIGHT')) displacement = [camDisplacement, 0];
+
+            if(dadOff != null)
+            {
+                baseX = dadOff[0];
+                baseY = dadOff[1];
+            }
+    }
+
+    if(focusedOn != null && focusedOn != 'gf')
+    {
+        PlayState.instance.cameraFollowPoint.setPosition(
+            baseX + displacement[0],
+            baseY + displacement[1]
+        );
+    }
+}
 }

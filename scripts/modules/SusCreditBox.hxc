@@ -21,7 +21,7 @@ var bg:FlxSprite;
 var text:FlxText;
 var subtext:FlxText;
 var size:Float = 0;
-var json;
+var json = null;
 var porter;
 
 function onCountdownStart(event)
