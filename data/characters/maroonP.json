@@ -6,6 +6,7 @@
 		0
 	],
 	"danceEvery": 2,
+	"applyStageMatrix": false,
 	"scale": 1.2,
 	"name": "maroonP",
 	"cameraOffsets": [
@@ -17,70 +18,94 @@
 	"singTime": 6.1,
 	"startingAnimation": "idle",
 	"healthIcon": {
-		"id": "maroon-parasite",
-		"isPixel": false
+		"offsets": [
+			0,
+			0
+		],
+		"shouldBop": true,
+		"isPixel": false,
+		"scale": 1,
+		"flipX": false,
+		"id": "maroon-parasite"
 	},
 	"assetPath": "shared:characters/triple/maroon/maroonParasite",
+	"atlasSettings": {
+		"applyStageMatrix": false,
+		"useRenderTexture": false,
+		"filterQuality": 1,
+		"cacheOnLoad": false,
+		"swfMode": true
+	},
 	"animations": [
 		{
-			"frameIndices": [],
-			"prefix": "idle",
 			"offsets": [
 				249,
 				40
 			],
-			"frameRate": 24,
-			"name": "idle",
+			"frameIndices": [],
+			"prefix": "idle",
+			"flipX": false,
+			"animType": "symbol",
 			"looped": false,
-			"animType": "symbol"
+			"name": "idle",
+			"flipY": false,
+			"frameRate": 24
 		},
 		{
-			"frameIndices": [],
-			"prefix": "right",
 			"offsets": [
 				243,
-				72
+				66
 			],
-			"frameRate": 24,
-			"name": "singRIGHT",
+			"frameIndices": [],
+			"prefix": "right",
+			"flipX": false,
+			"animType": "symbol",
 			"looped": false,
-			"animType": "symbol"
+			"name": "singRIGHT",
+			"flipY": false,
+			"frameRate": 24
 		},
 		{
+			"offsets": [
+				284,
+				215
+			],
 			"frameIndices": [],
 			"prefix": "down",
-			"offsets": [
-				294,
-				248
-			],
-			"frameRate": 24,
-			"name": "singDOWN",
+			"flipX": false,
+			"animType": "symbol",
 			"looped": false,
-			"animType": "symbol"
+			"name": "singDOWN",
+			"flipY": false,
+			"frameRate": 24
 		},
 		{
+			"offsets": [
+				300,
+				72
+			],
 			"frameIndices": [],
 			"prefix": "left",
-			"offsets": [
-				313,
-				73
-			],
-			"frameRate": 24,
-			"name": "singLEFT",
+			"flipX": false,
+			"animType": "symbol",
 			"looped": false,
-			"animType": "symbol"
+			"name": "singLEFT",
+			"flipY": false,
+			"frameRate": 24
 		},
 		{
+			"offsets": [
+				451,
+				282
+			],
 			"frameIndices": [],
 			"prefix": "up",
-			"offsets": [
-				513,
-				350
-			],
-			"frameRate": 24,
-			"name": "singUP",
+			"flipX": false,
+			"animType": "symbol",
 			"looped": false,
-			"animType": "symbol"
+			"name": "singUP",
+			"flipY": false,
+			"frameRate": 24
 		}
 	]
 }
