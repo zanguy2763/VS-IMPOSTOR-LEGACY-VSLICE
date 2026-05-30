@@ -1,0 +1,13 @@
+{
+    "version": "1.0.0",
+    "name": "Battling the Boyfriend",
+    "titleAsset": "storymenu/titles/extra",
+  "capsule": {
+    "name": "Battling the Boyfriend"
+  },
+    "props": [],
+    "background": "#FFFFFF",
+    "songs": [
+        "titular", "greatest-plan", "reinforcements", "armed"
+    ]
+}
