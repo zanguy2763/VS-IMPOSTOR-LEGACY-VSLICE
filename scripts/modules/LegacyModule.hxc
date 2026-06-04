@@ -1,9 +1,6 @@
 import funkin.modding.module.Module;
 import funkin.play.PlayState;
 import flixel.util.FlxColor;
-import flixel.math.FlxPoint;
-import StringTools;
-import flixel.FlxG;
 
 class LegacyModule extends Module
 {
@@ -15,8 +12,6 @@ class LegacyModule extends Module
     var bfOff:Array<Float> = null;
     var dadOff:Array<Float> = null;
     var focusedOn:String;
-
-    var camDisplacement:Float = 20;
 
     // function is called from utils
     public function camSpecialThing(?dad = null, ?bf = null, ?zoom:Float = -1, ?snaptoo:Int = -1)
@@ -45,37 +40,20 @@ class LegacyModule extends Module
             switch(char)
             {
                 case 1:            
-                focusedOn = 'dad';
+                    event.cancel();
 
-                event.cancel();
+                    PlayState.instance.resetCamera(false, false, false);      
+                    PlayState.instance.cancelCameraFollowTween();
+                    PlayState.instance.cameraFollowPoint.setPosition(dadOff[0], dadOff[1]);
 
-                baseX = dadOff[0];
-                baseY = dadOff[1];
+                case 0:
+                    event.cancel();
 
-                PlayState.instance.resetCamera(false, false, false);
-                PlayState.instance.cancelCameraFollowTween();
-                PlayState.instance.cameraFollowPoint.setPosition(baseX, baseY);
-
-        case 0:
-            focusedOn = 'bf';
-
-            event.cancel();
-
-            baseX = bfOff[0];
-            baseY = bfOff[1];
-
-            PlayState.instance.resetCamera(false, false, false);
-            PlayState.instance.cancelCameraFollowTween();
-            PlayState.instance.cameraFollowPoint.setPosition(baseX, baseY);
-            
-
-        case 2:
-            focusedOn = 'gf';
-
-        case -1:
-            focusedOn = null;
-    }
-}
+                    PlayState.instance.resetCamera(false, false, false);
+                    PlayState.instance.cancelCameraFollowTween();
+                    PlayState.instance.cameraFollowPoint.setPosition(bfOff[0], bfOff[1]);
+            }
+        }
 
         if(event.eventData.eventKind == 'flash')
         {
@@ -95,49 +73,4 @@ class LegacyModule extends Module
 			}
         }
     }
-
-    function onUpdate(event)
-{
-    if(PlayState.instance == null) return;
-
-    super.onUpdate(event);
-
-    var isPixelCam:Bool;
-    isPixelCam = FlxG.camera.pixelPerfectRender;
-
-    if(PlayState.instance.currentSong.id.toLowerCase() == 'esculent' || PlayState.instance.currentSong.id.toLowerCase() == 'sussus-nuzzus' || PlayState.instance.currentSong.id.toLowerCase() == 'idk' || PlayState.instance.currentSong.id.toLowerCase() == 'ow') return;
-
-    switch(focusedOn)
-    {
-        case 'bf':
-            var anim = PlayState.instance.currentStage.getBoyfriend().getCurrentAnimation();
-
-            if(StringTools.startsWith(anim, 'singLEFT')) FlxG.camera.targetOffset.set(-camDisplacement, 0);
-            if(StringTools.startsWith(anim, 'singDOWN')) FlxG.camera.targetOffset.set(0, camDisplacement);
-            if(StringTools.startsWith(anim, 'singUP')) FlxG.camera.targetOffset.set(0, -camDisplacement);
-            if(StringTools.startsWith(anim, 'singRIGHT')) FlxG.camera.targetOffset.set(camDisplacement, 0);
-            if(!StringTools.startsWith(anim, 'sing')) 
-            {
-                FlxG.camera.targetOffset.set(0, 0);
-                FlxG.camera.pixelPerfectRender = false;
-            }
-            else {FlxG.camera.pixelPerfectRender = isPixelCam;}
-
-            
-
-        case 'dad':
-            var anim = PlayState.instance.currentStage.getDad().getCurrentAnimation();
-
-            if(StringTools.startsWith(anim, 'singLEFT')) FlxG.camera.targetOffset.set(-camDisplacement, 0);
-            if(StringTools.startsWith(anim, 'singDOWN')) FlxG.camera.targetOffset.set(0, camDisplacement);
-            if(StringTools.startsWith(anim, 'singUP')) FlxG.camera.targetOffset.set(0, -camDisplacement);
-            if(StringTools.startsWith(anim, 'singRIGHT')) FlxG.camera.targetOffset.set(camDisplacement, 0);
-             if(!StringTools.startsWith(anim, 'sing')) 
-            {
-                FlxG.camera.targetOffset.set(0, 0);
-                FlxG.camera.pixelPerfectRender = isPixelCam;
-            }
-            else {FlxG.camera.pixelPerfectRender = false;}
-    }
-}
 }
