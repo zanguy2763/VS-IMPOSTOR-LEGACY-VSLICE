@@ -314,7 +314,6 @@ class CrushersUIScoreTextModule extends Module
 	{
 		super.onNoteMiss(event);
 		totalNotesPlayed += 1;
-		doScoreBounce();
 	}
 
 	function onSongEvent(event)
