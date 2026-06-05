@@ -1,6 +1,7 @@
 import funkin.play.PlayState;
 import funkin.modding.events.ScriptEvent;
 import funkin.modding.events.UpdateScriptEvent;
+import funkin.modding.events.HitNoteScriptEvent;
 import funkin.modding.module.Module;
 import funkin.play.scoring.Scoring;
 import funkin.Highscore;
@@ -11,6 +12,7 @@ import flixel.text.FlxBitmapText;
 import flixel.text.FlxTextBorderStyle;
 import flixel.util.FlxStringUtil;
 import flixel.tweens.FlxTween;
+import flixel.tweens.FlxEase;
 import flixel.FlxG;
 import Reflect;
 
@@ -74,9 +76,13 @@ class CrushersUIScoreTextModule extends Module
 
    var acc:Float = 0;
    var changedColor = true;
+	var scoreZoom = true;
 	var totalNotesHit:Float = 0;
 	var totalNotesPlayed:Float = 0;
 	var scoreTxtTween:FlxTween = null;
+	var currentRank:String = '';
+	var enableFullRankCalculation:Bool = true;
+	var inPlay:Bool = false;
 
 	public function new():Void
 	{
@@ -132,16 +138,22 @@ class CrushersUIScoreTextModule extends Module
 			playScoreText.active = false;
 		}
 
-			if (totalNotesPlayed > 0)
-				acc = FlxMath.roundDecimal((totalNotesHit / totalNotesPlayed) * 100, 2);
-			else
-				acc = Math.NaN;
+		acc = getAccuracyValue();
+
 		if(scoreTxt != null)
 		{
 			scoreTxt.text = getScoreText() + getMissesText() + getAccuracyText() + getRankText();
 			scoreTxt.x = (FlxG.width - scoreTxt.width) / 2; // BAND AID FIX because 0.8.3 dropped WAY earlier than expected
-         updateScoreColor();
+			updateScoreColor();
 		}
+	}
+
+	function getAccuracyValue():Float
+	{
+		if (totalNotesPlayed <= 0)
+			return Math.NaN;
+
+		return FlxMath.roundDecimal((totalNotesHit / totalNotesPlayed) * 100, 2);
 	}
 
 	function returnScoreTxtZIndex():Int
@@ -188,7 +200,8 @@ class CrushersUIScoreTextModule extends Module
 
 	function returnAccuracy():String
 	{
-		var clearPercentFloat:Float = FlxMath.roundDecimal((Highscore.tallies.sick + Highscore.tallies.good - Highscore.tallies.missed) / noteHitCalculation() * 100, 2);
+		var weightedHits:Float = Highscore.tallies.sick + Highscore.tallies.good * 0.67 + Highscore.tallies.bad * 0.34;
+		var clearPercentFloat:Float = FlxMath.roundDecimal(weightedHits / noteHitCalculation() * 100, 2);
 		if (Math.isNaN(clearPercentFloat) || clearPercentFloat < 0)
 			return 'N/A';
 		return clearPercentFloat + '';
@@ -203,19 +216,22 @@ class CrushersUIScoreTextModule extends Module
 
    function returnLegacyRank():String
    {
-     if (acc != acc || acc < 0) return 'N/A';
-     if(acc >= 99 && Highscore.tallies.missed == 0) return 'P';
-     if(acc >= 95 && Highscore.tallies.missed == 0) return 'S';
-     if(acc >= 90 && Highscore.tallies.missed <= 20) return 'A';
-     if(acc >= 85 && Highscore.tallies.missed <= 30) return 'B';
-     if(acc >= 70 && Highscore.tallies.missed <= 50) return 'C';
-     if(acc >= 50 && Highscore.tallies.missed <= 70) return 'D';
+     var weightedHits:Float = Highscore.tallies.sick + Highscore.tallies.good * 0.67 + Highscore.tallies.bad * 0.34;
+     var accuracy:Float = FlxMath.roundDecimal(weightedHits / noteHitCalculation() * 100, 2);
+     
+     if (Math.isNaN(accuracy) || accuracy < 0) return 'N/A';
+     if(accuracy >= 99 && Highscore.tallies.missed == 0) return 'P';
+     if(accuracy >= 95 && Highscore.tallies.missed == 0) return 'S';
+     if(accuracy >= 90 && Highscore.tallies.missed <= 20) return 'A';
+     if(accuracy >= 85 && Highscore.tallies.missed <= 30) return 'B';
+     if(accuracy >= 70 && Highscore.tallies.missed <= 50) return 'C';
+     if(accuracy >= 50 && Highscore.tallies.missed <= 70) return 'D';
      return 'F';
    }
 
 	function doScoreBounce():Void
 	{
-		if (scoreTxt == null)
+		if (!scoreZoom || scoreTxt == null || playState == null)
 			return;
 
 		if (scoreTxtTween != null)
@@ -248,7 +264,7 @@ class CrushersUIScoreTextModule extends Module
 			}
 		});
 
-		for (i in 0...RATING_TEXTS.length - 1)
+		for (i in 0...RATING_TEXTS.length)
 		{
 			if (score == RATING_TEXTS[i][0])
 				return RATING_TEXTS[i][1];
@@ -276,33 +292,21 @@ class CrushersUIScoreTextModule extends Module
 		totalNotesPlayed = 0;
    }
 
-	function onNoteHit(event:ScriptEvent):Void
+	public override function onNoteHit(event:ScriptEvent):Void
 	{
 		super.onNoteHit(event);
-		var judgement:String = Reflect.hasField(event, 'judgement') ? Reflect.field(event, 'judgement') : '';
-		var ratingMod:Float = 1;
-		switch (judgement) {
-			case 'good': ratingMod = 0.67;
-			case 'bad': ratingMod = 0.34;
-			case 'shit': ratingMod = 0;
-			default: ratingMod = 1;
-		}
 
-		var isPlayerNote:Bool = false;
-		if (Reflect.hasField(event, 'note')) {
-			var n = Reflect.field(event, 'note');
-			if (n != null && Reflect.hasField(n, 'noteData')) {
-				var nd = Reflect.field(n, 'noteData');
-				if (nd != null && Reflect.hasField(nd, 'getMustHitNote')) {
-					isPlayerNote = Reflect.callMethod(nd, Reflect.field(nd, 'getMustHitNote'), []);
-				}
+		var note = event.note;
+		if (note != null && scoreTxt != null)
+		{
+			if (note.noteData.getMustHitNote())
+			{
+				FlxTween.globalManager.cancelTweensOf(scoreTxt.scale);
+				
+				scoreTxt.scale.set(1.075, 1.075);
+				
+				FlxTween.tween(scoreTxt.scale, {x: 1, y: 1}, 0.25, {ease: FlxEase.quadOut});
 			}
-		}
-
-		if (isPlayerNote) {
-			totalNotesPlayed += 1;
-			totalNotesHit += ratingMod;
-			doScoreBounce();
 		}
 	}
 
@@ -310,6 +314,7 @@ class CrushersUIScoreTextModule extends Module
 	{
 		super.onNoteMiss(event);
 		totalNotesPlayed += 1;
+		doScoreBounce();
 	}
 
 	function onSongEvent(event)
