@@ -41,6 +41,7 @@ class CameraFollow extends Module
     function onUpdate(event)
     {
         if(PlayState.instance == null) return;
+        if (PlayState.instance.isPaused) return;
         super.onUpdate(event);
 
         var isPixelCam:Bool;
