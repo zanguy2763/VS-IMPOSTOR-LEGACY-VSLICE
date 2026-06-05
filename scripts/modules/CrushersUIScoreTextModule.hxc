@@ -287,9 +287,23 @@ class CrushersUIScoreTextModule extends Module
 			case 'shit': ratingMod = 0;
 			default: ratingMod = 1;
 		}
-		totalNotesPlayed += 1;
-		totalNotesHit += ratingMod;
-		doScoreBounce();
+
+		var isPlayerNote:Bool = false;
+		if (Reflect.hasField(event, 'note')) {
+			var n = Reflect.field(event, 'note');
+			if (n != null && Reflect.hasField(n, 'noteData')) {
+				var nd = Reflect.field(n, 'noteData');
+				if (nd != null && Reflect.hasField(nd, 'getMustHitNote')) {
+					isPlayerNote = Reflect.callMethod(nd, Reflect.field(nd, 'getMustHitNote'), []);
+				}
+			}
+		}
+
+		if (isPlayerNote) {
+			totalNotesPlayed += 1;
+			totalNotesHit += ratingMod;
+			doScoreBounce();
+		}
 	}
 
 	override function onNoteMiss(event)
