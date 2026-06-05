@@ -1,3 +1,5 @@
+package psych.states.playstate;
+
 import funkin.modding.module.Module;
 import funkin.modding.events.HitNoteScriptEvent;
 import funkin.data.notestyle.NoteStyleRegistry;
@@ -169,7 +171,7 @@ class PsychHolds extends Module {
         for (holdNote in game.playerStrumline.holdNotes) {
             if (holdNote != null && holdNote.hitNote && !holdNote.missedNote && holdNote.sustainLength > 0 && holdNote.alive && holdNote.noteData != null) {
                 var kind = NoteKindManager.getNoteKind(holdNote.noteData.kind);
-                if (kind != null && !kind.scoreable) continue;
+                if (kind != null && (!kind.scoreable || kind.noanim)) continue;
                 var suffix = (kind != null && kind.suffix != null) ? kind.suffix : '';
                 if (bf != null && usesVSlice(bf))
                 {
@@ -196,16 +198,24 @@ class PsychHolds extends Module {
         }
     }
 
+    var isSussus(get, never):Bool;
+    function get_isSussus():Bool
+    {
+        var game = PlayState.instance;
+        return game != null && game.currentSong != null && game.currentSong.id == 'sussus-moogus';
+    }
+
     override function onBeatHit(event) {
         super.onBeatHit(event);
         if (FlxG.state.subState != null) return;
         var game = PlayState.instance;
         if (game == null) return;
+        var isSussus:Bool = this.isSussus;
 
         var bf = getBF();
         if (playerNewNoteTimer <= 0 && bf != null && usesVSlice(bf)) {
             var playerDirs = getActivePlayerDirs();
-            if (playerDirs.length >= 2) {
+            if (playerDirs.length >= 2 && isSussus) {
                 playerHoldDirCursor = (playerHoldDirCursor + 1) % playerDirs.length;
                 var dirIdx = playerDirs[playerHoldDirCursor];
                 var suffixP = getSuffixFromChar(bf);
@@ -224,7 +234,7 @@ class PsychHolds extends Module {
         }
 
         var oppDirs = getActiveOppDirs();
-        if (oppDirs.length >= 2) {
+        if (oppDirs.length >= 2 && isSussus) {
             oppHoldDirCursor = (oppHoldDirCursor + 1) % oppDirs.length;
             var dirIdx = oppDirs[oppHoldDirCursor];
             var oppChar = getOppChar(dirIdx, oppDirs);
@@ -254,6 +264,7 @@ class PsychHolds extends Module {
         if (FlxG.state.subState != null) return;
         var game = PlayState.instance;
         if (game == null) return;
+        var isSussus:Bool = this.isSussus;
 
         if (playerNewNoteTimer > 0) {
             playerNewNoteTimer -= FlxG.elapsed;
@@ -265,7 +276,7 @@ class PsychHolds extends Module {
         var bf = getBF();
         if (playerNewNoteTimer <= 0 && bf != null && usesVSlice(bf)) {
             var playerDirs = getActivePlayerDirs();
-            if (playerDirs.length >= 2) {
+            if (playerDirs.length >= 2 && isSussus) {
                 if (playerRandAnimTimer <= 0) {
                     playerHoldDirCursor = (playerHoldDirCursor + 1) % playerDirs.length;
                     var dirIdx = playerDirs[playerHoldDirCursor];
@@ -281,7 +292,7 @@ class PsychHolds extends Module {
         }
 
         var oppDirs = getActiveOppDirs();
-        if (oppDirs.length >= 2) {
+        if (oppDirs.length >= 2 && isSussus) {
             if (oppRandAnimTimer <= 0) {
                 oppHoldDirCursor = (oppHoldDirCursor + 1) % oppDirs.length;
                 var dirIdx = oppDirs[oppHoldDirCursor];
