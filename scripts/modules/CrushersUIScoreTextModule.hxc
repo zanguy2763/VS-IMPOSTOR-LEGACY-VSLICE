@@ -229,23 +229,6 @@ class CrushersUIScoreTextModule extends Module
      return 'F';
    }
 
-	function doScoreBounce():Void
-	{
-		if (!scoreZoom || scoreTxt == null || playState == null)
-			return;
-
-		if (scoreTxtTween != null)
-			scoreTxtTween.cancel();
-
-		scoreTxt.scale.x = 1.075;
-		scoreTxt.scale.y = 1.075;
-		scoreTxtTween = FlxTween.tween(scoreTxt.scale, {x: 1, y: 1}, 0.2, {
-			onComplete: function(twn:FlxTween) {
-				scoreTxtTween = null;
-			}
-		});
-	}
-
 	function returnRank():String
 	{
 		var score:String = Scoring.getRating({
