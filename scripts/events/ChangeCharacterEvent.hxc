@@ -6,6 +6,7 @@ import funkin.play.character.BaseCharacter;
 import funkin.play.character.CharacterType;
 import funkin.play.PlayState;
 import haxe.ds.StringMap;
+import Reflect;
 
 /*
  * The is the event for changing characters.
@@ -99,12 +100,10 @@ class ChangeCharacterModule extends Module
 		firstGF = PlayState.instance.currentChart.characters.girlfriend;
 		firstDad = PlayState.instance.currentChart.characters.opponent;
 
-		// Adding initial characters to the map so that it will reset properly when restarting.
 		characterMap.set(firstBF, PlayState.instance.currentStage.getBoyfriend());
 		characterMap.set(firstGF, PlayState.instance.currentStage.getGirlfriend());
 		characterMap.set(firstDad, PlayState.instance.currentStage.getDad());
 
-		// Adding characters to the map so that they can be preloaded.
 		for (event2 in event.events)
 		{
 			if (event2.eventKind != "ChangeCharacterEvent")
@@ -119,7 +118,6 @@ class ChangeCharacterModule extends Module
 		}
 	}
 
-   // Adds the preloaded character to stage and hides them.
 	function preloadCharacter(charID:String):Void
 	{
 		var char:BaseCharacter = CharacterDataParser.fetchCharacter(charID);
@@ -135,55 +133,71 @@ class ChangeCharacterModule extends Module
 		characterMap.set(charID, char);
 	}
 
-   // Finishes and sets the character data and then makes the character visible.
 	public function changeCharacter(role:String, newChar:String):Void
    {
 	if (PlayState.instance == null) return;
-	if (PlayState.instance.currentStage == null) return;
+	var stage = PlayState.instance.currentStage;
+	if (stage == null) return;
 
 	var newCharacter:BaseCharacter = characterMap.get(newChar);
-	var finalScale:Float = 1; // To make sure that global offsets are applied.
+	var finalScale:Float = 1;
 
 	if (newCharacter == null)
-		return;
-
-	if (newCharacter == PlayState.instance.currentStage.getBoyfriend() || newCharacter == PlayState.instance.currentStage.getDad() || newCharacter == PlayState.instance.currentStage.getGirlfriend())
 	{
 		newCharacter = CharacterDataParser.fetchCharacter(newChar);
-
 		if (newCharacter == null)
 			return;
 
 		newCharacter.visible = false;
 		newCharacter.active = false;
 		newCharacter.alpha = 0.001;
-
-		PlayState.instance.currentStage.add(newCharacter);
-
+		stage.add(newCharacter);
 		characterMap.set(newChar, newCharacter);
 	}
+
+	if (newCharacter == stage.getBoyfriend() || newCharacter == stage.getDad() || newCharacter == stage.getGirlfriend())
+	{
+		newCharacter = CharacterDataParser.fetchCharacter(newChar);
+		if (newCharacter == null)
+			return;
+
+		newCharacter.visible = false;
+		newCharacter.active = false;
+		newCharacter.alpha = 0.001;
+		stage.add(newCharacter);
+		characterMap.set(newChar, newCharacter);
+	}
+
+	var stageCharacters = if (stage._data != null) stage._data.characters else null;
+	if (stageCharacters == null)
+		stageCharacters = {bf: {scale: 1}, dad: {scale: 1}, gf: {scale: 1}};
 
 	switch (role)
 	{
 		case "bf":
 
-			var oldBF = PlayState.instance.currentStage.getBoyfriend();
+			var oldBF = stage.getBoyfriend();
 
-			if (oldBF != newCharacter)
+			if (oldBF != null && oldBF != newCharacter)
 			{
 				oldBF.alpha = 0.001;
 				oldBF.visible = false;
 				oldBF.active = false;
 			}
 
-			newCharacter.x = PlayState.instance.currentStage.getBoyfriendPosition().x - newCharacter.characterOrigin.x;
-			newCharacter.y = PlayState.instance.currentStage.getBoyfriendPosition().y - newCharacter.characterOrigin.y;
+			var bfPos = stage.getBoyfriendPosition();
+			if (bfPos != null && newCharacter.characterOrigin != null)
+			{
+				newCharacter.x = bfPos.x - newCharacter.characterOrigin.x;
+				newCharacter.y = bfPos.y - newCharacter.characterOrigin.y;
+			}
 
-			finalScale = newCharacter.getBaseScale() * PlayState.instance.currentStage._data.characters.bf.scale;
+			finalScale = newCharacter.getBaseScale() * (stageCharacters != null && stageCharacters.bf != null ? stageCharacters.bf.scale : 1);
 			newCharacter.setScale(finalScale);
 
 			newCharacter.flipX = !newCharacter.getDataFlipX();
-			newCharacter.zIndex = oldBF.zIndex;
+			if (oldBF != null)
+				newCharacter.zIndex = oldBF.zIndex;
 
 			newCharacter.visible = true;
 			newCharacter.alpha = 1;
@@ -192,30 +206,35 @@ class ChangeCharacterModule extends Module
 			newCharacter.alive = true;
 
 			newCharacter.characterType = CharacterType.BF;
-			newCharacter.dance(true); // To prevent character from being frozen.
+			newCharacter.dance(true);
 
-			PlayState.instance.currentStage.characters.set("bf", newCharacter);
-         newCharacter.initHealthIcon(false);
+			if (stage.characters != null)
+				stage.characters.set("bf", newCharacter);
+			newCharacter.initHealthIcon(false);
 
 		case "dad":
 
-			var oldDad = PlayState.instance.currentStage.getDad();
+			var oldDad = stage.getDad();
 
-			if (oldDad != newCharacter)
+			if (oldDad != null && oldDad != newCharacter)
 			{
 				oldDad.alpha = 0.001;
 				oldDad.visible = false;
 				oldDad.active = false;
 			}
 
-			newCharacter.x = PlayState.instance.currentStage.getDadPosition().x - newCharacter.characterOrigin.x;
-			newCharacter.y = PlayState.instance.currentStage.getDadPosition().y - newCharacter.characterOrigin.y;
+			var dadPos = stage.getDadPosition();
+			if (dadPos != null && newCharacter.characterOrigin != null)
+			{
+				newCharacter.x = dadPos.x - newCharacter.characterOrigin.x;
+				newCharacter.y = dadPos.y - newCharacter.characterOrigin.y;
+			}
 
-			finalScale = newCharacter.getBaseScale() * PlayState.instance.currentStage._data.characters.dad.scale;
+			finalScale = newCharacter.getBaseScale() * (stageCharacters != null && stageCharacters.dad != null ? stageCharacters.dad.scale : 1);
 			newCharacter.setScale(finalScale);
 
 		   newCharacter.flipX = newCharacter.getDataFlipX();
-			newCharacter.zIndex = oldDad.zIndex;
+			newCharacter.zIndex = if (oldDad != null) oldDad.zIndex else newCharacter.zIndex;
 
 			newCharacter.visible = true;
 			newCharacter.alpha = 1;
@@ -226,29 +245,36 @@ class ChangeCharacterModule extends Module
 			newCharacter.characterType = CharacterType.DAD;
 			newCharacter.dance(true);
 
-			PlayState.instance.currentStage.characters.set("dad", newCharacter);
-         newCharacter.initHealthIcon(true);
+			if (stage.characters != null)
+				stage.characters.set("dad", newCharacter);
+			newCharacter.initHealthIcon(true);
 
 		case "gf":
 
-			var oldGF = PlayState.instance.currentStage.getGirlfriend();
+			var oldGF = stage.getGirlfriend();
 
-			if (oldGF != newCharacter)
+			if (oldGF != null && oldGF != newCharacter)
 			{
 				oldGF.alpha = 0.001;
 				oldGF.visible = false;
 				oldGF.active = false;
 			}
 
-			newCharacter.x = PlayState.instance.currentStage.getGirlfriendPosition().x - newCharacter.characterOrigin.x;
-			newCharacter.y = PlayState.instance.currentStage.getGirlfriendPosition().y - newCharacter.characterOrigin.y;
+			var gfPos = stage.getGirlfriendPosition();
+			if (gfPos != null && newCharacter.characterOrigin != null)
+			{
+				newCharacter.x = gfPos.x - newCharacter.characterOrigin.x;
+				newCharacter.y = gfPos.y - newCharacter.characterOrigin.y;
+			}
 
-			finalScale = newCharacter.getBaseScale() * PlayState.instance.currentStage._data.characters.gf.scale;
+			finalScale = newCharacter.getBaseScale() * (stageCharacters != null && Reflect.hasField(stageCharacters, 'gf') && stageCharacters.gf != null ? stageCharacters.gf.scale : 1);
 			newCharacter.setScale(finalScale);
 
 			newCharacter.flipX = newCharacter.getDataFlipX();
-			newCharacter.zIndex = oldGF.zIndex;
-
+			if (newChar == "gf-ghost")
+				newCharacter.zIndex = 50;
+			else
+				newCharacter.zIndex = if (oldGF != null) oldGF.zIndex else newCharacter.zIndex;
 			newCharacter.visible = true;
 			newCharacter.alpha = 1;
 			newCharacter.active = true;
@@ -258,10 +284,11 @@ class ChangeCharacterModule extends Module
 			newCharacter.characterType = CharacterType.GF;
 			newCharacter.dance(true);
 
-			PlayState.instance.currentStage.characters.set("gf", newCharacter);
+			if (stage.characters != null)
+				stage.characters.set("gf", newCharacter);
 	}
 
-	PlayState.instance.currentStage.refresh();
+	stage.refresh();
 }
 
    // Reset the characters when restarting the song.
