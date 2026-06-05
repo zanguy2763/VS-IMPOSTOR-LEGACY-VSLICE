@@ -1,12 +1,10 @@
-package psych.states.playstate;
-
 import funkin.modding.module.Module;
 
 class BadNoComboBreak extends Module
 {
 	function new()
 	{
-		super("Bad No Combo Break");
+		super("nocombobreakig");
 	}
 
 	override function onNoteHit(event)
