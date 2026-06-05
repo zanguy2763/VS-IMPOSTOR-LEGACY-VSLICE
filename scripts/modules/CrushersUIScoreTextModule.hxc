@@ -10,7 +10,9 @@ import flixel.math.FlxMath;
 import flixel.text.FlxBitmapText;
 import flixel.text.FlxTextBorderStyle;
 import flixel.util.FlxStringUtil;
+import flixel.tweens.FlxTween;
 import flixel.FlxG;
+import Reflect;
 
 class CrushersUIScoreTextModule extends Module
 {
@@ -70,8 +72,11 @@ class CrushersUIScoreTextModule extends Module
 	var scoreTxt:FlxBitmapText = null;
 	var playScoreText:FlxBitmapText = null;
 
-   var acc = null;
+   var acc:Float = 0;
    var changedColor = true;
+	var totalNotesHit:Float = 0;
+	var totalNotesPlayed:Float = 0;
+	var scoreTxtTween:FlxTween = null;
 
 	public function new():Void
 	{
@@ -88,6 +93,11 @@ class CrushersUIScoreTextModule extends Module
 		playScoreText = playState.scoreText;
 
 		scoreTxt = new FlxBitmapText(0, playScoreText.y, '', playScoreText.font);
+		try {
+			scoreTxt.font = FlxBitmapFont.fromAngelCode(Paths.font("vcr-bmp.png"), Paths.font("vcr-bmp.fnt"));
+		} catch (e:Dynamic) {
+			scoreTxt.font = playScoreText.font;
+		}
 		scoreTxt.borderColor = playScoreText.borderColor;
 		scoreTxt.textColor = playScoreText.textColor;
 		scoreTxt.letterSpacing = playScoreText.letterSpacing;
@@ -122,7 +132,10 @@ class CrushersUIScoreTextModule extends Module
 			playScoreText.active = false;
 		}
 
-      acc = FlxMath.roundDecimal((Highscore.tallies.sick + Highscore.tallies.good - Highscore.tallies.missed) / noteHitCalculation() * 100, 2);
+			if (totalNotesPlayed > 0)
+				acc = FlxMath.roundDecimal((totalNotesHit / totalNotesPlayed) * 100, 2);
+			else
+				acc = Math.NaN;
 		if(scoreTxt != null)
 		{
 			scoreTxt.text = getScoreText() + getMissesText() + getAccuracyText() + getRankText();
@@ -170,7 +183,15 @@ class CrushersUIScoreTextModule extends Module
 	{
 		return ' | Accuracy: '
 			+ returnAccuracy()
-         + ACCURACY_SIGN;
+		+ ACCURACY_SIGN;
+	}
+
+	function returnAccuracy():String
+	{
+		var clearPercentFloat:Float = FlxMath.roundDecimal((Highscore.tallies.sick + Highscore.tallies.good - Highscore.tallies.missed) / noteHitCalculation() * 100, 2);
+		if (Math.isNaN(clearPercentFloat) || clearPercentFloat < 0)
+			return 'N/A';
+		return clearPercentFloat + '';
 	}
 
    function getRankText():String
@@ -182,7 +203,7 @@ class CrushersUIScoreTextModule extends Module
 
    function returnLegacyRank():String
    {
-     if(Math.isNaN(acc) || acc < 0) return 'N/A';
+     if (acc != acc || acc < 0) return 'N/A';
      if(acc >= 99 && Highscore.tallies.missed == 0) return 'P';
      if(acc >= 95 && Highscore.tallies.missed == 0) return 'S';
      if(acc >= 90 && Highscore.tallies.missed <= 20) return 'A';
@@ -192,30 +213,39 @@ class CrushersUIScoreTextModule extends Module
      return 'F';
    }
 
-	function returnAccuracy():Float
+	function doScoreBounce():Void
 	{
-		var clearPercentFloat:Float = FlxMath.roundDecimal((Highscore.tallies.sick + Highscore.tallies.good - Highscore.tallies.missed) / noteHitCalculation() * 100, 2);
-		if (Math.isNaN(clearPercentFloat) || clearPercentFloat < 0) return 'N/A';
-		return clearPercentFloat;
+		if (scoreTxt == null)
+			return;
+
+		if (scoreTxtTween != null)
+			scoreTxtTween.cancel();
+
+		scoreTxt.scale.x = 1.075;
+		scoreTxt.scale.y = 1.075;
+		scoreTxtTween = FlxTween.tween(scoreTxt.scale, {x: 1, y: 1}, 0.2, {
+			onComplete: function(twn:FlxTween) {
+				scoreTxtTween = null;
+			}
+		});
 	}
 
 	function returnRank():String
 	{
-		var score:String = Scoring.calculateRank(
-		{
-      score: playState.songScore,
-      tallies:
-      {
-        sick: Highscore.tallies.sick,
-        good: Highscore.tallies.good,
-        bad: Highscore.tallies.bad,
-        shit: Highscore.tallies.shit,
-        missed: Highscore.tallies.missed,
-        combo: Highscore.tallies.combo,
-        maxCombo: Highscore.tallies.maxCombo,
-        totalNotesHit: Highscore.tallies.totalNotesHit,
-        totalNotes: noteHitCalculation()
-      }
+		var score:String = Scoring.getRating({
+			score: playState.songScore,
+			tallies:
+			{
+				sick: Highscore.tallies.sick,
+				good: Highscore.tallies.good,
+				bad: Highscore.tallies.bad,
+				shit: Highscore.tallies.shit,
+				missed: Highscore.tallies.missed,
+				combo: Highscore.tallies.combo,
+				maxCombo: Highscore.tallies.maxCombo,
+				totalNotesHit: Highscore.tallies.totalNotesHit,
+				totalNotes: noteHitCalculation()
+			}
 		});
 
 		for (i in 0...RATING_TEXTS.length - 1)
@@ -242,7 +272,31 @@ class CrushersUIScoreTextModule extends Module
    function onSongLoaded(event)
    {
      changedColor = false;
+		totalNotesHit = 0;
+		totalNotesPlayed = 0;
    }
+
+	function onNoteHit(event:ScriptEvent):Void
+	{
+		super.onNoteHit(event);
+		var judgement:String = Reflect.hasField(event, 'judgement') ? Reflect.field(event, 'judgement') : '';
+		var ratingMod:Float = 1;
+		switch (judgement) {
+			case 'good': ratingMod = 0.67;
+			case 'bad': ratingMod = 0.34;
+			case 'shit': ratingMod = 0;
+			default: ratingMod = 1;
+		}
+		totalNotesPlayed += 1;
+		totalNotesHit += ratingMod;
+		doScoreBounce();
+	}
+
+	override function onNoteMiss(event)
+	{
+		super.onNoteMiss(event);
+		totalNotesPlayed += 1;
+	}
 
 	function onSongEvent(event)
 	{
