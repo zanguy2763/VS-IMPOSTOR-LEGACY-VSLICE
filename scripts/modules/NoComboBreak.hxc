@@ -1,10 +1,10 @@
 import funkin.modding.module.Module;
 
-class BadNoComboBreak extends Module
+class NoComboBreak extends Module
 {
 	function new()
 	{
-		super("nocombobreakig");
+		super("NoComboBreak");
 	}
 
 	override function onNoteHit(event)
