@@ -1,0 +1,67 @@
+import funkin.modding.module.Module;
+import Std;
+import funkin.ui.options.OptionsState;
+import flixel.util.FlxSave;
+import flixel.FlxG;
+import funkin.play.PlayState;
+import Type;
+import funkin.util.Constants;
+
+class GhostTapping extends Module
+{
+    var saveFile = null;
+
+    var isEnabled:Bool = true;
+
+    var onOptionsScreen:Bool = false;
+
+    function initializeSave(){
+        saveFile = new FlxSave();
+        saveFile.bind("ghosttappingoptions", "Nebula_Zorua");
+    }
+
+    function terminateSave(){
+        if(saveFile != null)saveFile.close();
+        saveFile = null;
+    }
+
+    function new(){
+        super("Ghost Tapping", 1);
+        initializeSave();
+
+        if(saveFile.data.enabled == null)
+            saveFile.data.enabled = true;
+
+        isEnabled = saveFile.data.enabled;
+
+        terminateSave();
+    }
+
+
+    override function onStateChangeEnd(event){
+        super.onStateChangeEnd(event);
+        onOptionsScreen = false;
+        if(Std.isOfType(event.targetState, OptionsState)){
+            var preferencesPage = event.targetState.optionsCodex.pages.get("preferences");
+            onOptionsScreen = true;
+
+            initializeSave();
+
+            preferencesPage.createPrefItemCheckbox("Ghost Tapping", "Inputs that don't hit notes won't cause a miss", function(value) {
+                saveFile.data.enabled = value;
+                isEnabled = value;
+            }, saveFile.data.enabled);
+
+        }else if(onOptionsScreen)
+            terminateSave();
+    }
+
+    override function onNoteGhostMiss(event){
+        super.onNoteGhostMiss(event);
+        if(isEnabled){
+            event.cancel();
+            event.stopPropagation();
+        }
+    }
+
+}
