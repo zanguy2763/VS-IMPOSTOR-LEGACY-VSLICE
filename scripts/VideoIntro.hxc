@@ -1,0 +1,125 @@
+import funkin.play.PlayState;
+import funkin.modding.module.Module;
+import funkin.play.event.SongEvent;
+import funkin.modding.events.ScriptEvent;
+import funkin.play.cutscene.VideoCutscene;
+import funkin.graphics.video.FunkinVideoSprite;
+import flixel.FlxG;
+import funkin.Paths;
+import funkin.ui.title.TitleState;
+import funkin.ui.MusicBeatState;
+import funkin.modding.base.ScriptedMusicBeatState;
+
+class VideoCreate extends Module {
+	var didit = false;
+
+	public function new() {
+		super('VideoCreate');
+	}
+
+	function onStateChangeEnd(event:StateChangeScriptEvent) {
+		super.onStateChangeBegin(event);
+		var state2 = event.targetState;
+
+		if (!didit) {
+			var state2 = ScriptedMusicBeatState.init('VideoStart');
+			FlxG.switchState(state2);
+			didit = true;
+		}
+	}
+}
+
+class VideoStart extends MusicBeatState {
+	var videoName = 'intro';
+	var vid:FunkinVideoSprite;
+
+	var canSkip:Bool = false;
+	var skipCooldown:Float = 0;
+
+	var waitingToSwitch:Bool = false;
+	var waitTimer:Float = 0;
+
+	public function new() {
+		super();
+	}
+
+	function create() {
+		super.create();
+		playVideo(Paths.videos(videoName));
+	}
+
+	function update(elapsed:Float) {
+		super.update(elapsed);
+
+		if (!canSkip) {
+			skipCooldown += elapsed;
+			if (skipCooldown >= 0.5) {
+				canSkip = true;
+			}
+		}
+
+		if (canSkip && !waitingToSwitch) {
+			if (FlxG.keys.justPressed.SPACE || FlxG.touches.justStarted().length > 0) {
+				stopVideo();
+				waitingToSwitch = true;
+				waitTimer = 0;
+			}
+		}
+
+		if (waitingToSwitch) {
+			waitTimer += elapsed;
+			if (waitTimer >= 0.3) {
+				FlxG.switchState(new TitleState());
+			}
+		}
+	}
+
+	function stopVideo():Void {
+		if (vid != null) {
+			vid.stop();
+			remove(vid);
+			vid.destroy();
+			vid = null;
+		}
+	}
+
+	function playVideo(filePath:String):Void {
+		vid = new FunkinVideoSprite(0, 0);
+
+		if (vid != null) {
+			vid.zIndex = 0;
+			vid.bitmap.onEndReached.add(onVideoEnd);
+			add(vid);
+
+			if (vid.load(filePath)) {
+				vid.play();
+			}
+
+			vid.bitmap.onFormatSetup.add(function():Void {
+				if (vid == null) return;
+
+				var vidW = vid.bitmap.width;
+				var vidH = vid.bitmap.height;
+
+				var scrW = FlxG.width;
+				var scrH = FlxG.height;
+
+				var scaleX:Float = scrW / vidW;
+				var scaleY:Float = scrH / vidH;
+				var scale:Float = Math.max(scaleX, scaleY);
+
+				vid.setGraphicSize(Std.int(vidW * scale), Std.int(vidH * scale));
+				vid.updateHitbox();
+				vid.screenCenter();
+			});
+		} else {
+			trace('ALERT: Video is null! Could not play cutscene!');
+		}
+	}
+
+	function onVideoEnd():Void {
+		stopVideo();
+		waitingToSwitch = true;
+		waitTimer = 0;
+	}
+}

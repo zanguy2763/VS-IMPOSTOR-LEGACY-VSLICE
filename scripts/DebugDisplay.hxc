@@ -1,0 +1,201 @@
+import funkin.modding.module.Module;
+import funkin.modding.events.UpdateScriptEvent;
+import funkin.ui.options.OptionsState;
+import funkin.save.Save;
+import funkin.util.MemoryUtil;
+import flixel.FlxG;
+import flixel.util.FlxStringUtil;
+import openfl.text.TextField;
+import openfl.text.TextFormat;
+import openfl.Assets;
+import openfl.display.Bitmap;
+import openfl.display.BitmapData;
+import openfl.text.TextFieldAutoSize;
+import funkin.Paths;
+import funkin.Preferences;
+import funkin.play.PlayState;
+import funkin.ui.title.TitleState;
+import funkin.ui.mainmenu.MainMenuState;
+import funkin.ui.freeplay.FreeplayState;
+import funkin.ui.credits.CreditsState;
+import funkin.ui.story.StoryMenuState;
+import funkin.ui.MusicBeatState;
+import funkin.ui.ScriptedMusicBeatState;
+import flixel.FlxState;
+import Reflect;
+
+class DebugDisplay extends Module
+{
+	static final DISABLED = 'Disabled';
+	static final SIMPLE = 'Simple';
+	static final ADVANCED = 'Advanced';
+
+	var display:TextField;
+	var bg:Bitmap;
+	var count:Int;
+	var elapsedTotal:Float;
+
+	public function new()
+	{
+		super('DebugDisplay');
+
+		count = 0;
+		elapsedTotal = 0;
+
+		if (Save.instance.modOptions['FPS Display'] == null)
+			Save.instance.modOptions['FPS Display'] = SIMPLE;
+	}
+
+	override function onStateChangeEnd(event)
+	{
+		super.onStateChangeEnd(event);
+		if (event.targetState == null) return;
+
+		if (Std.isOfType(event.targetState, OptionsState))
+		{
+			var prefs = event.targetState.optionsCodex.pages.get('preferences');
+			prefs.createPrefItemEnum('FPS Display', 'Choose the FPS counter display mode.',
+				[DISABLED => DISABLED, SIMPLE => SIMPLE, ADVANCED => ADVANCED],
+				function(value:String)
+				{
+					Save.instance.modOptions['FPS Display'] = value;
+					Save.instance.flush();
+				},
+				Save.instance.modOptions['FPS Display']);
+			return;
+		}
+
+		if (display == null)
+		{
+			try
+			{
+				for (i in 0...FlxG.game.parent.numChildren)
+				{
+					var child = FlxG.game.parent.getChildAt(i);
+					if (child.name == 'DebugDisplay')
+					{
+						display = child;
+						break;
+					}
+					if (child.name == 'DebugDisplayBG')
+						bg = child;
+				}
+			}
+			catch (e:Dynamic) {}
+		}
+		if (display == null)
+		{
+			var fontName = '_sans';
+			try
+			{
+				var loadedFont = FlxG.assets.getFontUnsafe(Paths.font('aller.ttf'));
+				if (loadedFont != null) fontName = loadedFont.fontName;
+			}
+			catch (e:Dynamic)
+			{
+				try
+				{
+					var loadedFont = Assets.getFont(Paths.font('aller.ttf'));
+					if (loadedFont != null) fontName = loadedFont.fontName;
+				}
+				catch (e2:Dynamic) {}
+			}
+
+			var fmt = new TextFormat(fontName, 14, 0xFFFFFF);
+			fmt.leading = 5;
+
+			bg = new Bitmap();
+			bg.name = 'DebugDisplayBG';
+			bg.bitmapData = new BitmapData(1, 1, true, 0x6F000000);
+
+			display = new TextField();
+			display.name = 'DebugDisplay';
+			display.defaultTextFormat = fmt;
+			display.text = 'FPS: 0';
+			display.x = 10;
+			display.y = 10;
+			display.selectable = false;
+			display.mouseEnabled = false;
+			display.autoSize = TextFieldAutoSize.LEFT;
+			display.multiline = true;
+
+			try
+			{
+				FlxG.game.parent.addChild(bg);
+				FlxG.game.parent.addChild(display);
+			}
+			catch (e:Dynamic) {}
+		}
+	}
+
+	function getStateName(state:FlxState):String
+	{
+		if (state == null) return 'null';
+
+		if (Std.isOfType(state, ScriptedMusicBeatState))
+		{
+			var scriptName = Reflect.getProperty(state, 'scriptName');
+			if (scriptName != null) return 'ScriptedState \u2022 (scripts/states/$scriptName)';
+			return 'funkin.ui.ScriptedMusicBeatState';
+		}
+
+		if (Std.isOfType(state, PlayState)) return 'funkin.play.PlayState';
+		if (Std.isOfType(state, TitleState)) return 'funkin.ui.title.TitleState';
+		if (Std.isOfType(state, MainMenuState)) return 'funkin.ui.mainmenu.MainMenuState';
+		if (Std.isOfType(state, OptionsState)) return 'funkin.ui.options.OptionsState';
+		if (Std.isOfType(state, FreeplayState)) return 'funkin.ui.freeplay.FreeplayState';
+		if (Std.isOfType(state, CreditsState)) return 'funkin.ui.credits.CreditsState';
+		if (Std.isOfType(state, StoryMenuState)) return 'funkin.ui.story.StoryMenuState';
+		if (Std.isOfType(state, MusicBeatState)) return 'funkin.ui.MusicBeatState';
+
+		return 'unknown';
+	}
+
+	override function onUpdate(event:UpdateScriptEvent)
+	{
+		if (display == null) return;
+
+		var mode:String = Save.instance.modOptions['FPS Display'];
+		if (mode == DISABLED)
+		{
+			display.visible = false;
+			if (bg != null) bg.visible = false;
+			return;
+		}
+		display.visible = true;
+		if (bg != null) bg.visible = true;
+
+		count++;
+		elapsedTotal += event.elapsed;
+		if (elapsedTotal >= 0.1)
+		{
+			var fps = Std.int(count / elapsedTotal);
+			var gcMem:Float = MemoryUtil.getGCMemory();
+			var taskMem:Float = MemoryUtil.getTaskMemory();
+			if (taskMem <= 0) taskMem = gcMem;
+			var gcStr = FlxStringUtil.formatBytes(gcMem);
+			var taskStr = FlxStringUtil.formatBytes(taskMem);
+			var str = 'FPS: $fps \u2022 [GC: $gcStr | Task: $taskStr]';
+			display.textColor = 0xFFFFFF;
+
+			if (mode == ADVANCED)
+			{
+				var stateName = getStateName(FlxG.state);
+				str += '\nState: $stateName';
+			}
+
+			display.text = str;
+
+			if (bg != null)
+			{
+				bg.x = display.x - 3;
+				bg.y = display.y - 3;
+				bg.width = display.width + 3;
+				bg.height = display.height + (mode == ADVANCED ? 0 : -5);
+			}
+
+			count = 0;
+			elapsedTotal = 0;
+		}
+	}
+}
