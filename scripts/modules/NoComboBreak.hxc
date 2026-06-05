@@ -1,0 +1,20 @@
+import funkin.modding.module.Module;
+
+class BadNoComboBreak extends Module
+{
+	function new()
+	{
+		super("nocombobreakig");
+	}
+
+	override function onNoteHit(event)
+	{
+		super.onNoteHit(event);
+
+		if (event.judgement == 'bad' || event.judgement == 'shit')
+			event.isComboBreak = false;
+
+		if (event.judgement == 'hold' || event.judgement == 'hold-perfect')
+			event.judgement = 'good';
+	}
+}

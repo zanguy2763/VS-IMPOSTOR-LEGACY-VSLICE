@@ -7,7 +7,7 @@ class CameraFollow extends Module
 {
     public function new()
     {
-        ("CameraFollow");
+        super("CameraFollow");
     }
 
     var focusedOn:String;
