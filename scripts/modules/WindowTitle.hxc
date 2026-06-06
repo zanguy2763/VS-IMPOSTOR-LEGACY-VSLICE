@@ -1,0 +1,11 @@
+import funkin.modding.module.Module;
+import funkin.util.WindowUtil;
+
+class WindowTitleModule extends Module
+{
+	public function new()
+	{
+		super('WindowTitle');
+		WindowUtil.setWindowTitle('VS IMPOSTOR LEGACY V-SLICE');
+	}
+}

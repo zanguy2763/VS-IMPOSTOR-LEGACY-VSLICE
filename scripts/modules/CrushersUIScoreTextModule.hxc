@@ -73,7 +73,7 @@ class CrushersUIScoreTextModule extends Module
 	var playScoreText:FlxBitmapText = null;
 
    var acc:Float = 0;
-   var changedColor = true;
+
 	var scoreZoom = true;
 	var totalNotesHit:Float = 0;
 	var totalNotesPlayed:Float = 0;
@@ -346,7 +346,6 @@ class CrushersUIScoreTextModule extends Module
 
    function onSongLoaded(event)
    {
-     changedColor = false;
 		totalNotesHit = 0;
 		totalNotesPlayed = 0;
    }
@@ -377,15 +376,10 @@ class CrushersUIScoreTextModule extends Module
 
 	function onSongEvent(event)
 	{
-		if (event.eventData.eventKind == 'ChangeCharacter')
-		{
-			changedColor = false;
-		}
 	}
 
 	function onSongRetry(event)
 	{
-		changedColor = false;
 	}
 
 	// 🔴 ALTERAÇÃO PRINCIPAL AQUI
@@ -394,18 +388,17 @@ class CrushersUIScoreTextModule extends Module
 		if (playState == null || scoreTxt == null) return;
 		if (playState.iconP2 == null) return;
 
-		var song:String = playState.currentSong.id.toLowerCase();
-
-		// Bloqueia mudança de cor nessas músicas
-		if (song == "defeat" || song == "boiling-point" || song == "sussus-nuzzus")
+		var c = 0xFFFFFFFF;
+		if (playState.iconP2.characterId == "maroon-parasite")
+			c = 0xFF800015;
+		else
 		{
-			return;
+			var song:String = playState.currentSong.id.toLowerCase();
+			if (song == "defeat" || song == "boiling-point" || song == "sussus-nuzzus")
+				return;
+			c = IconColourFinder.findIconColour(PlayState.instance.iconP2);
 		}
-
-		if (!changedColor)
-		{
-			scoreTxt.color = IconColourFinder.findIconColour(PlayState.instance.iconP2);
-			changedColor = true;
-		}
+		scoreTxt.textColor = c;
+		scoreTxt.color = c;
 	}
 }
