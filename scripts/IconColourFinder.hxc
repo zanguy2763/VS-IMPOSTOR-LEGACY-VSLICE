@@ -3,7 +3,6 @@
     Mod Page: https://gamebanana.com/mods/612284
     Mod Github: https://github.com/JugieNoob/V-Slice-Healthbar-Plus
 */
-
 import flixel.util.FlxColor;
 import funkin.save.Save;
 import Std;
@@ -11,142 +10,102 @@ import Std;
 
 class IconColourFinder
 {
-
     public static function findIconColour(icon)
     {
-        findIconColourNew(icon);
         if (icon != null)
         {
             if (Save.instance.modOptions["IconColourMethod"] == "Slow")
             {
-                findIconColourNew(icon);
+                return findIconColourNew(icon);
             }
             else
             {
-                findIconColourOld(icon);
+                return findIconColourOld(icon);
             }
         }
         else
         {
             return 0xFFFFFFFF;
         }
-        
-
     }
-
-
     public static function findIconColourOld(icon)
     {
-        var iconColour;
-        var colorArray = [];
-        var lightestColour = 0;
-        var ypos = 0;
-        var xpos = 0;
-        // Try to get the colours
-        for (i in 0...30)
-        {			
-            iconColour = icon.pixels.getPixel(xpos,ypos);
-               
-            if (iconColour != 0 && !colorArray.contains(iconColour) && iconColour != 16777215)
-            {
-                colorArray.push(iconColour);
-            }
-            if (ypos < 50)
-            {
-                ypos += 5;
-            }
-            xpos += 5;
-        }
-        // Find the lightest colour
-        if (colorArray != [])
+        var best = 0xFFFFFFFF;
+        var bestSat = -1;
+        var pixels = icon.pixels;
+        if (pixels == null && icon.graphic != null) pixels = icon.graphic.bitmap;
+        if (pixels == null) return best;
+        var w = Std.int(icon.width);
+        var h = Std.int(icon.height);
+        var startX = Std.int(w * 0.15);
+        var startY = Std.int(h * 0.15);
+        var endX = Std.int(w * 0.85);
+        var endY = Std.int(h * 0.85);
+        for (cx in 0...6)
         {
-            for (i in 0...colorArray.length)
+            for (cy in 0...6)
             {
-                if (colorArray[i] > lightestColour)
+                var x = startX + Std.int((endX - startX) * cx / 5);
+                var y = startY + Std.int((endY - startY) * cy / 5);
+                var px = pixels.getPixel(x, y);
+                if (px == 0) continue;
+                var r = (px >> 16) & 0xFF;
+                var g = (px >> 8) & 0xFF;
+                var b = px & 0xFF;
+                if (r >= 248 && g >= 248 && b >= 248) continue;
+                var sat = Std.int(Math.max(r, Math.max(g, b))) - Std.int(Math.min(r, Math.min(g, b)));
+                if (sat > bestSat) { bestSat = sat; best = 0xFF000000 | px; }
+            }
+        }
+        if (best == 0xFFFFFFFF)
+        {
+            for (x in 0...w)
+            {
+                for (y in 0...h)
                 {
-                    iconColour = colorArray[i];
-                    lightestColour = colorArray[i];
+                    var px = pixels.getPixel(x, y);
+                    if (px == 0) continue;
+                    best = 0xFF000000 | px;
+                    break;
                 }
+                if (best != 0xFFFFFFFF) break;
             }
-
         }
-        else
-        {
-            iconColour = 16777215;
-        }   
-
-
-        
-		return FlxColor.fromString("0xFF" + FlxColor.toHexString(iconColour, false));
+        return best;
     }
-
-
 	public static function findIconColourNew(icon)
     {
-        trace("finding colour");
-        var iconColour;
-        var colorArray = [];
-
-		// Lower = more detail
-		var detail:Int = 3;
-    
-        if (icon == null)
+        if (icon == null) return 0xFFFFFFFF;
+        var freqMap = [];
+        var detail:Int = 3;
+		var pixels = icon.pixels;
+		if (pixels == null && icon.graphic != null) pixels = icon.graphic.bitmap;
+		if (pixels == null) return 0xFFFFFFFF;
+		for (i in 0...Std.int(icon.width / detail))
+		{
+			for (j in 0...Std.int(icon.height / detail))
+			{
+				var pixel = pixels.getPixel(i * detail, j * detail);
+				if (pixel == 0) continue;
+                var r = (pixel >> 16) & 0xFF;
+                var g = (pixel >> 8) & 0xFF;
+                var b = pixel & 0xFF;
+                if (r >= 224 && g >= 224 && b >= 224) continue;
+                if (r < 10 && g < 10 && b < 10) continue;
+                var found = false;
+                for (item in freqMap)
+                {
+                    if (item[0] == pixel) { item[1]++; found = true; break; }
+                }
+                if (!found) freqMap.push([pixel, 1]);
+			}
+		}
+        if (freqMap.length == 0) return 0xFFFFFFFF;
+        var winner = freqMap[0];
+        for (i in 1...freqMap.length)
         {
-            return;
+            if (freqMap[i][1] > winner[1]) winner = freqMap[i];
         }
-        trace("icon is not null");
-		for (i in 0...Std.int(icon.width) / detail)
-		{
-			for (j in 0...Std.int(icon.height) / detail)
-			{
-				var pixelColour = icon.graphic.bitmap.getPixel(i * detail, j * detail);
-				if (pixelColour != 0)
-				{
-					colorArray.push(pixelColour);
-				}
-			}
-		}
-		frequencyArray = [];
-
-		for (i in 0...colorArray.length)
-		{
-			var foundItem = false;
-			for (item in frequencyArray)
-			{
-				if (item[0] == colorArray[i])
-				{
-					item[1] += 1;
-					foundItem = true;
-				}
-			}
-
-			if (!foundItem)
-			{
-				frequencyArray.push([colorArray[i], 0]);
-			}
-			
-		
-		}
-
-		winningArray = frequencyArray[0];
-
-		for (i in 1...frequencyArray.length)
-		{
-			if (frequencyArray[i][1] > winningArray[1])
-			{
-				winningArray = frequencyArray[i];
-			}
-		}
-
-		iconColour = winningArray[0];
-        
-        trace("icon colour: " + iconColour);
-		// Clear all arrays after done
-		colorArray = [];
-		frequencyArray = [];
-		winningArray = [];
-
-		return FlxColor.fromString("0xFF" + FlxColor.toHexString(iconColour));
+		return 0xFF000000 | winner[0];
     }
 }
-    
