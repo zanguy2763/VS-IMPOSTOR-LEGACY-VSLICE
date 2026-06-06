@@ -18,7 +18,7 @@ class Emitters extends Module
     {
         super.onCountdownStart(event);
 
-        if(PlayState.instance.currentChart.songName.toLowerCase() == 'boiling point')
+        if(PlayState.instance.currentChart.songName.toLowerCase() == 'boiling point' || PlayState.instance.currentChart.songName.toLowerCase() == 'sussus moogus' || PlayState.instance.currentChart.songName.toLowerCase() == 'sabotage' || PlayState.instance.currentChart.songName.toLowerCase() == 'meltdown')
         {
             if(emberEmitter != null) return;
 
