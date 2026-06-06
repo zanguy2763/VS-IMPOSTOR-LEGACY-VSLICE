@@ -18,8 +18,6 @@ import Reflect;
 
 class CrushersUIScoreTextModule extends Module
 {
-	// -----------------------------------
-	// Settings //
 
 	/**
 	 * The brackets the UI elements are put in.
@@ -98,22 +96,65 @@ class CrushersUIScoreTextModule extends Module
 		playState = PlayState.instance;
 		playScoreText = playState.scoreText;
 
-		scoreTxt = new FlxBitmapText(0, playScoreText.y, '', playScoreText.font);
+		scoreTxt = new FlxBitmapText(0, playScoreText.y + 42.5, '', playScoreText.font);
 		try {
 			scoreTxt.font = FlxBitmapFont.fromAngelCode(Paths.font("vcr-bmp.png"), Paths.font("vcr-bmp.fnt"));
 		} catch (e:Dynamic) {
 			scoreTxt.font = playScoreText.font;
 		}
+		scoreTxt.width = FlxG.width;
+		scoreTxt.alignment = "center";
+		if (playScoreText != null) playScoreText.alignment = "center";
+		scoreTxt.x = (FlxG.width - scoreTxt.width) / 2;
 		scoreTxt.borderColor = playScoreText.borderColor;
+		try {
+			if (Reflect.hasField(playScoreText, 'borderSize'))
+				scoreTxt.borderSize = Reflect.field(playScoreText, 'borderSize') + 2;
+			else
+				scoreTxt.borderSize = playScoreText.borderSize + 2;
+		} catch (e:Dynamic) {
+			// fallback
+			try { scoreTxt.borderSize = playScoreText.borderSize; } catch (e2:Dynamic) {}
+		}
 		scoreTxt.textColor = playScoreText.textColor;
-		scoreTxt.letterSpacing = playScoreText.letterSpacing;
+		var scoreTxtSize:Int = 16;
+		try
+		{
+			if (Reflect.hasField(playScoreText, 'textSize'))
+				scoreTxtSize = Reflect.field(playScoreText, 'textSize');
+			else if (Reflect.hasField(playScoreText, 'size'))
+				scoreTxtSize = Reflect.field(playScoreText, 'size');
+		}
+		catch (e:Dynamic)
+		{
+		}
+		try
+		{
+			if (Reflect.hasField(scoreTxt, 'textSize'))
+				Reflect.setField(scoreTxt, 'textSize', scoreTxtSize + 2);
+			else if (Reflect.hasField(scoreTxt, 'size'))
+				Reflect.setField(scoreTxt, 'size', scoreTxtSize + 2);
+			else
+				scoreTxt.size = scoreTxtSize + 2;
+		}
+		catch (e:Dynamic)
+		{
+		}
 		scoreTxt.wordWrap = playScoreText.wordWrap;
 		scoreTxt.scrollFactor.set(playScoreText.scrollFactor.x, playScoreText.scrollFactor.y);
 		scoreTxt.zIndex = returnScoreTxtZIndex();
 		scoreTxt.cameras = [playState.camHUD];
 		playState.add(scoreTxt);
 		playState.refresh();
-	}
+
+		if (playState.healthBar != null)
+		{
+			scoreTxt.width = FlxG.width;
+			scoreTxt.x = (FlxG.width - scoreTxt.width) / 2;
+			if (playState.healthBar.height != null)
+				scoreTxt.y = playState.healthBar.y + (playState.healthBar.height - scoreTxt.height) / 2 + 50;
+		}
+		}
 
    function onCountdownStart(event)
 	{
@@ -143,7 +184,23 @@ class CrushersUIScoreTextModule extends Module
 		if(scoreTxt != null)
 		{
 			scoreTxt.text = getScoreText() + getMissesText() + getAccuracyText() + getRankText();
-			scoreTxt.x = (FlxG.width - scoreTxt.width) / 2; // BAND AID FIX because 0.8.3 dropped WAY earlier than expected
+
+			try
+			{
+				if (Reflect.hasField(scoreTxt, 'autoWidth')) Reflect.setField(scoreTxt, 'autoWidth', false);
+				if (Reflect.hasField(scoreTxt, 'fieldWidth')) Reflect.setField(scoreTxt, 'fieldWidth', FlxG.width);
+				scoreTxt.alignment = "center";
+				centerScoreText();
+			}
+			catch (e:Dynamic)
+			{
+				try { scoreTxt.alignment = "center"; scoreTxt.x = 0; } catch (e2:Dynamic) {}
+			}
+
+			if (playState.healthBar != null && playState.healthBar.height != null)
+			{
+				scoreTxt.y = playState.healthBar.y + (playState.healthBar.height - scoreTxt.height) / 2 + 42.5;
+			}
 			updateScoreColor();
 		}
 	}
@@ -167,6 +224,25 @@ class CrushersUIScoreTextModule extends Module
 		}
 
 		return playScoreText.zIndex + 1;
+	}
+
+	function centerScoreText():Void
+	{
+		if (scoreTxt == null || scoreTxt.scale == null) return;
+
+		var scaleX:Float = 1;
+		if (Reflect.hasField(scoreTxt.scale, 'x') && Reflect.field(scoreTxt.scale, 'x') != null)
+			scaleX = Reflect.field(scoreTxt.scale, 'x');
+
+		var scaledWidth:Float = scoreTxt.width * scaleX;
+		if (playState != null && playState.healthBar != null && playState.healthBar.x != null && playState.healthBar.width != null)
+		{
+			scoreTxt.x = playState.healthBar.x + (playState.healthBar.width - scaledWidth) / 2;
+		}
+		else
+		{
+			scoreTxt.x = (FlxG.width - scaledWidth) / 2;
+		}
 	}
 
 	function getScoreText():String
@@ -285,10 +361,10 @@ class CrushersUIScoreTextModule extends Module
 			if (note.noteData.getMustHitNote())
 			{
 				FlxTween.globalManager.cancelTweensOf(scoreTxt.scale);
-				
+				scoreTxt.origin.set(scoreTxt.width / 2, scoreTxt.height / 2);
 				scoreTxt.scale.set(1.075, 1.075);
-				
-				FlxTween.tween(scoreTxt.scale, {x: 1, y: 1}, 0.25, {ease: FlxEase.quadOut});
+				centerScoreText();
+				FlxTween.tween(scoreTxt.scale, {x: 1, y: 1}, 0.25, {ease: FlxEase.quadOut, onUpdate: function(t:Dynamic):Void { centerScoreText(); }});
 			}
 		}
 	}
