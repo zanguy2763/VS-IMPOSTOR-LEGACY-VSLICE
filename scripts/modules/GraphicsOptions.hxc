@@ -97,7 +97,7 @@ class GraphicsOptions extends Module
                 save.modOptions["GPU Caching"] = value;
             }, save.modOptions["GPU Caching"]);
 
-            prefs.createPrefItemCheckbox("Disable Reset Key", "Prevents the reset key from killing the player mid-song", function(value) {
+            prefs.createPrefItemCheckbox("Disable Reset Key", "Disables resetting mid-song", function(value) {
                 save.modOptions["Disable Reset Key"] = value;
             }, save.modOptions["Disable Reset Key"]);
         }
