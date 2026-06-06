@@ -2,6 +2,8 @@ import funkin.modding.module.Module;
 import Std;
 import funkin.ui.options.OptionsState;
 import funkin.save.Save;
+import funkin.play.PlayState;
+import flixel.FlxG;
 
 class GraphicsOptions extends Module
 {
@@ -22,10 +24,54 @@ class GraphicsOptions extends Module
 
         if(save.modOptions["Low Quality"] == null)
             save.modOptions["Low Quality"] = false;
+
+        if(save.modOptions["Anti-Aliasing"] == null)
+            save.modOptions["Anti-Aliasing"] = true;
+
+        if(save.modOptions["GPU Caching"] == null)
+            save.modOptions["GPU Caching"] = false;
+
+        if(save.modOptions["Disable Reset Key"] == null)
+            save.modOptions["Disable Reset Key"] = false;
     }
 
 
     var inOptions:Bool = false;
+
+    var lastAntiAlias:Bool = true;
+    var lastGpuCache:Bool = false;
+    var lastHealth:Float = 1.0;
+
+    override function onUpdate(event){
+        super.onUpdate(event);
+        if (FlxG.camera != null && save.modOptions["Anti-Aliasing"] != lastAntiAlias)
+        {
+            lastAntiAlias = save.modOptions["Anti-Aliasing"];
+            FlxG.camera.antialiasing = lastAntiAlias;
+        }
+        if (save.modOptions["GPU Caching"] != lastGpuCache)
+        {
+            lastGpuCache = save.modOptions["GPU Caching"];
+            if (FlxG.stage != null) FlxG.stage.cacheAsBitmap = lastGpuCache;
+        }
+
+        if (PlayState.instance != null)
+            lastHealth = PlayState.instance.health;
+    }
+
+    override function onGameOver(event)
+    {
+        if (!save.modOptions["Disable Reset Key"]) return;
+        var ps = PlayState.instance;
+        if (ps == null) return;
+        if (lastHealth <= 0.0) return;
+
+        event.eventCanceled = true;
+        ps.health = lastHealth;
+        ps.deathCounter -= 1;
+        if (FlxG.sound.music != null) FlxG.sound.music.resume();
+        if (ps.vocals != null) ps.vocals.resume();
+    }
 
     override function onStateChangeEnd(event){
         super.onStateChangeEnd(event);
@@ -42,6 +88,18 @@ class GraphicsOptions extends Module
             prefs.createPrefItemCheckbox("Low Quality", "If disabled, disables specific items from background to improve performance.", function(value) {
                 save.modOptions["Low Quality"] = value;
             }, save.modOptions["Low Quality"]);
+
+            prefs.createPrefItemCheckbox("Anti-Aliasing", "Enables Anti-Aliasing", function(value) {
+                save.modOptions["Anti-Aliasing"] = value;
+            }, save.modOptions["Anti-Aliasing"]);
+
+            prefs.createPrefItemCheckbox("GPU Caching", "Enables GPU Caching", function(value) {
+                save.modOptions["GPU Caching"] = value;
+            }, save.modOptions["GPU Caching"]);
+
+            prefs.createPrefItemCheckbox("Disable Reset Key", "Prevents the reset key from killing the player mid-song", function(value) {
+                save.modOptions["Disable Reset Key"] = value;
+            }, save.modOptions["Disable Reset Key"]);
         }
     }
 }
