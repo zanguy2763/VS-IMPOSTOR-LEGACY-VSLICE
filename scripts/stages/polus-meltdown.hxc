@@ -1,0 +1,24 @@
+import funkin.play.stage.Stage;
+
+class MeltdownStage extends Stage
+{
+	public function new()
+	{
+		super('polus-meltdown');
+	}
+
+	function onBeatHit(event)
+	{
+		super.onBeatHit(event);
+
+		var speaker = this.getNamedProp('speaker');
+		var crowd = this.getNamedProp('crowd');
+
+		if (speaker != null) speaker.playAnimation('bop', true);
+		if (event.beat % 2 == 0 && crowd != null)
+		{
+			crowd.playAnimation('bop', true);
+			crowd.animation.curAnim.looped = false;
+		}
+	}
+}
