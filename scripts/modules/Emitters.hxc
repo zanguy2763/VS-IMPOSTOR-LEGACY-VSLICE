@@ -18,8 +18,7 @@ class Emitters extends Module
     {
         super.onCountdownStart(event);
 
-        if(PlayState.instance.currentChart.songName.toLowerCase() == 'boiling point')
-        {
+        if(PlayState.instance.currentChart.songName.toLowerCase() == 'boiling point'
             if(emberEmitter != null) return;
 
 	emberEmitter = new FlxEmitter(-1200, 1000);
