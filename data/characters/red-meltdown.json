@@ -2,7 +2,7 @@
 	"renderType": "animateatlas",
 	"offsets": [
 		0,
-		100
+		0
 	],
 	"applyStageMatrix": false,
 	"vslice_sustains": false,
